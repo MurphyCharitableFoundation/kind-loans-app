@@ -125,7 +125,9 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
             </Link>
           )}
         </Toolbar>
+        {sectionTitle!=""&&
         <SectionTitle title={sectionTitle} />
+        }{/* do not show while there are not title */}
       </Container>
     </AppBar>
   );

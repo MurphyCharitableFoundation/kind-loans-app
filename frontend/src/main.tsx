@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import LoanRequests from "./pages/LoanRequests/LoanRequests";
+import LandingPages from "./pages/LandingPage/LandingPages";
 import MyLoanRequest from "./pages/MyLoanRequest/MyLoanRequest";
 import NotFound from "./pages/NotFound/NotFound";
 import "./index.css";
@@ -22,9 +23,14 @@ import { Provider } from "react-redux";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
+  //should add a landing page here
   {
     path: "/",
     element: <AppWrapper children={<LoanRequests />} title="Loan requests" />,
+  },
+  {
+    path: "/landing",
+    element: <AppWrapper children={<LandingPages />} title="" />,
   },
   {
     path: "/myloanrequest",

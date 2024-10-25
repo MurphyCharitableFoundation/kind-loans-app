@@ -4,3 +4,4 @@ export default interface LoanProfile {
   user_name: string;
   business_type: string;
 }
+
