@@ -37,7 +37,7 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
     Cookies.remove("token");
     dispatch(setToken(null));
     toast.success("Signed out successfully");
-  }
+  };
 
   return (
     <AppBar position="sticky" elevation={0}>
@@ -107,12 +107,22 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
                 onClose={handleCloseUserMenu}
               >
                 <MenuItem key="sign_out" onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }} onClick={signOutHandler}>
+                  <Typography
+                    sx={{ textAlign: "center" }}
+                    onClick={signOutHandler}
+                  >
                     Sign out
                   </Typography>
                 </MenuItem>
                 <MenuItem key="profile" onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>Profile</Typography>
+                  <Typography sx={{ textAlign: "center" }}>
+                    <Link
+                      to={"/profile"}
+                      style={{ color: "#000000", textDecoration: "none" }}
+                    >
+                      Profile
+                    </Link>
+                  </Typography>
                 </MenuItem>
               </Menu>
             </Box>

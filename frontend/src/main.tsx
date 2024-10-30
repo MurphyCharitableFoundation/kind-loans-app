@@ -14,6 +14,7 @@ import "@fontsource/roboto/700.css";
 import AppWrapper from "./components/AppWrapper";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
+import Profile from "./pages/Profile/Profile";
 import AppTheme from "./theme/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { store } from "./store";
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <AppWrapper children={<SignUp />} title="Sign up" />,
+  },
+  {
+    path: "/profile",
+    element: <AppWrapper children={<Profile />} title="Sign up" />,
   },
   {
     path: "*",
