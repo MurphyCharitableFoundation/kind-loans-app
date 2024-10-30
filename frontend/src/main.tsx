@@ -43,7 +43,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/profile",
-    element: <AppWrapper children={<Profile />} title="Sign up" />,
+    element: <AppWrapper children={<Profile />} title="Profile" />,
   },
   {
     path: "*",
