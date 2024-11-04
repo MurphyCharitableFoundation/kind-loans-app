@@ -17,7 +17,7 @@ export default function LoanProfileCard({ loanProfile }: { loanProfile: LoanProf
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button size="small" sx={{ padding: 0 }}>Learn More</Button>
       </CardActions>
     </Card>
   );

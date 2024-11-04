@@ -12,10 +12,17 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import profilePic from "../assets/dummypic.png";
 import SectionTitle from "./SectionTitle";
-
-const settings = ["Profile", "Account", "Logout"];
+import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "../features/auth/authSlice";
+import { RootState } from "../store";
+import Cookies from "js-cookie";
+import toast from "react-hot-toast";
 
 function Header({ sectionTitle }: { sectionTitle: string }) {
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.auth.token);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -26,8 +33,14 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
     setAnchorElUser(null);
   };
 
+  const signOutHandler = () => {
+    Cookies.remove("token");
+    dispatch(setToken(null));
+    toast.success("Signed out successfully");
+  }
+
   return (
-    <AppBar position="sticky">
+    <AppBar position="sticky" elevation={0}>
       <Container maxWidth="lg" sx={{ p: 0 }}>
         <Toolbar disableGutters sx={{ px: 2 }}>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -42,11 +55,10 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
               fontFamily: "monospace",
               fontWeight: 700,
               letterSpacing: ".3rem",
-              color: "inherit",
               textDecoration: "none",
             }}
           >
-            KIND LOANS
+            kind loans
           </Typography>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
@@ -65,40 +77,53 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
               textDecoration: "none",
             }}
           >
-            KIND LOANS
+            kind loans
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={profilePic} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
+          {token && (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{ p: 0, borderRadius: "50%" }}
+                >
+                  <Avatar alt="Remy Sharp" src={profilePic} />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: "45px" }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                <MenuItem key="sign_out" onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: "center" }} onClick={signOutHandler}>
+                    Sign out
                   </Typography>
                 </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+                <MenuItem key="profile" onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: "center" }}>Profile</Typography>
+                </MenuItem>
+              </Menu>
+            </Box>
+          )}
+          {!token && (
+            <Link to="/signin">
+              <Button sx={{ ml: 2 }} variant="contained">
+                Sign in
+              </Button>
+            </Link>
+          )}
         </Toolbar>
         <SectionTitle title={sectionTitle} />
       </Container>

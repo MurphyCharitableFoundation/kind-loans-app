@@ -2,11 +2,12 @@
 
 ## Setup
 
-- Run `docker compose build` to build the docker images
-- Run `docker compose run --rm backend sh -c "python manage.py createsuperuser"` to create a superuser
-- Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6"` to generate sample data
-- Run `docker compose up` to start the containers
-- Run `docker compose down` to stop the containers
+- 1. Install Docker
+- 2. Run `docker compose build` to build the docker images
+- 3. Run `docker compose run --rm backend sh -c "python manage.py createsuperuser"` to create a superuser
+- 4. Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6` to generate sample data
+- 5. Run `docker compose up` to start the containers
+- 6. Run `docker compose down` to stop the containers
 
 ## Backend
 

@@ -4,7 +4,7 @@ import LoanProfileCard from "../../components/LoanProfileCard";
 import LoanProfile from "../../types/LoanProfile";
 
 
-function Requests() {
+function LoanRequests() {
   const { data, error, isLoading } = useQuery<LoanProfile[]>({
     queryKey: ["loan-profiles"],
     queryFn: async () => {
@@ -29,4 +29,4 @@ function Requests() {
   );
 }
 
-export default Requests;
+export default LoanRequests;

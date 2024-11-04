@@ -1,16 +1,24 @@
-import { Box, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 
 export default function SectionTitle({ title }: { title: string }) {
   return (
-    <Box
+    <Paper
       sx={{
-        px: 2,
-        backgroundColor: "secondary.main",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        py: 1,
+        bgcolor: "background.default",
+        borderTop: 1,
+        borderBottom: 1,
+        borderColor: "divider",
+        borderRadius: 0,
       }}
+      elevation={4}
     >
-      <Typography variant="h6" component="h6" sx={{ py: 1, color: "text.primary" }}>
+      <Typography variant="h6" component="h6" sx={{ px: 2 }}>
         {title}
       </Typography>
-    </Box>
+    </Paper>
   );
 }

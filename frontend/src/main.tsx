@@ -2,51 +2,60 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Home from "./pages/Home/Home";
-import Requests from "./pages/Requests/Requests";
-import CreateRequest from "./pages/CreateRequest/CreateRequest";
+import { CssBaseline } from "@mui/material";
+import LoanRequests from "./pages/LoanRequests/LoanRequests";
+import MyLoanRequest from "./pages/MyLoanRequest/MyLoanRequest";
+import NotFound from "./pages/NotFound/NotFound";
 import "./index.css";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import AppWrapper from "./components/AppWrapper";
+import SignIn from "./pages/SignIn/SignIn";
+import SignUp from "./pages/SignUp/SignUp";
+import AppTheme from "./theme/ThemeProvider";
+import { Toaster } from "react-hot-toast";
+import { store } from "./store";
+import { Provider } from "react-redux";
 
 const queryClient = new QueryClient();
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1976d2",
-    },
-    secondary: {
-      main: "#e1f5fe",
-    },
-  },
-});
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <AppWrapper children={<Home />} title="My Loan Profiles" />,
+    element: <AppWrapper children={<LoanRequests />} title="Loan requests" />,
   },
   {
-    path: "/requests",
-    element: <AppWrapper children={<Requests />} title="Loan Requests" />,
+    path: "/myloanrequest",
+    element: (
+      <AppWrapper children={<MyLoanRequest />} title="My loan request" />
+    ),
   },
   {
-    path: "/create-request",
-    element: <AppWrapper children={<CreateRequest />} title="Create Loan Request" />,
+    path: "/signin",
+    element: <AppWrapper children={<SignIn />} title="Sign in" />,
+  },
+  {
+    path: "/signup",
+    element: <AppWrapper children={<SignUp />} title="Sign up" />,
+  },
+  {
+    path: "*",
+    element: <AppWrapper children={<NotFound />} title="Not found" />,
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ThemeProvider>
+      <AppTheme>
+        <CssBaseline />
+        <Toaster position="bottom-center" />
+        <Provider store={store}>
+          <RouterProvider router={router} />
+        </Provider>
+      </AppTheme>
     </QueryClientProvider>
   </StrictMode>
 );
