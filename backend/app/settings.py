@@ -28,8 +28,6 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -47,6 +45,7 @@ INSTALLED_APPS = [
     "user",
     "cities_light",
     "loan_profile",
+    "payment",
     "corsheaders",
 ]
 
@@ -155,3 +154,11 @@ CORS_ALLOWED_ORIGINS = [
 ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1"]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# Paypal
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID")
+PAYPAL_SECRET_KEY = os.environ.get("PAYPAL_SECRET_KEY")
+PAYPAL_BASE_URL = os.environ.get("PAYPAL_BASE_URL")
+PAYPAL_MODE = os.environ.get("PAYPAL_MODE")
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = ""
