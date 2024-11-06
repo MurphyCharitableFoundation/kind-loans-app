@@ -2,88 +2,105 @@ import { Box } from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-import { styled } from '@mui/material/styles';
+import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-// should have two types maybe but just image + story and image + progress bar?
-const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 10,
-    borderRadius: 5,
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor: theme.palette.grey[200],
-      ...theme.applyStyles('dark', {
-        backgroundColor: theme.palette.grey[800],
-      }),
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: '#1a90ff',
-      ...theme.applyStyles('dark', {
-        backgroundColor: '#308fe8',
-      }),
-    },
-  }));
 
-function BorrowerCard (props){
+function BorrowerCard({LoanPofile:{imgPath,loanDescription,localtionDescription}}) {
     return (
         <Card>
             <CardMedia
-            component="img"
-            height="40%"
-            image="../../../public/free-images.avif"
-            alt="Borrower Img"
-            sx={{mb:"1rem",mt:"1rem"}}
+                component="img"
+                image={imgPath}
+                alt="Borrower Img"
+                sx={{ objectFit: "contain" }}
             />
-            <CardContent>
-                <Typography variant="body2" sx={{mb:"1rem",mt:"1rem"}}>
-                    "I'm a 32-year old mother of three with a dream to build my own tailoring business so I can support my family."
+            <CardContent sx={{ px: 2, pt: 2 }}>
+                <Typography variant="body2">
+                    {loanDescription}
                 </Typography>
-                <Typography variant="caption" sx={{mb:"1rem",mt:"1rem"}}>
-                    -Monal, Clothing shop owner in Uganda
+                <Typography variant="caption">
+                    {localtionDescription}
                 </Typography>
-            </CardContent>
-      </Card>
-    )
-}
-
-function BorrowerCardWithProgress (props){
-    return (
-        <Card>
-            <CardMedia
-            component="img"
-            height="40%"
-            image="../../../public/free-images.avif"
-            alt="Borrower Img"
-            sx={{mb:"1rem",mt:"1rem"}}
-            />
-            <CardContent>
-                <Typography variant="body2" sx={{mb:"1rem",mt:"1rem"}}>
-                    Help Tanya build her small fishing business
-                </Typography>
-                <Box mb="1rem" mt="1rem" display='flex' justifyContent='space-between' alignItems="center">
-                    <Typography variant="caption" sx={{flexGrow: 1}}>
-                        Bukedea, Uganda
-                    </Typography>
-                    <Typography variant="caption">
-                        xx days left
-                    </Typography>
-                </Box>
-                <BorderLinearProgress variant="determinate" value={50} />
-                <Box display="flex" justifyContent="space-between">
-                    <Typography variant="caption" align="right" width="100%">
-                        $400 more to go
-                    </Typography>
-                </Box>
-                <Button variant='contained'>
-                    View Loan
-                </Button>
             </CardContent>
         </Card>
     )
 }
 
+function BorrowerCardWithProgress({LoanPofile:{imgPath,loanTitle,location,timeLine,progressbarPercent,fundingProgress}}) {
+    return (
+        <Card>
+            <CardMedia
+                component="img"
+                image={imgPath}
+                alt="Borrower Img"
+                sx={{ objectFit: "contain" }}
+            />
+            <CardContent sx={{ px: 2, pt: 2 }}>
+                <Typography variant="body2">
+                    {loanTitle}
+                </Typography>
+                <Box mb="1rem" mt="1rem" display='flex' justifyContent='space-between' alignItems="center">
+                    <Typography variant="caption" sx={{ flexGrow: 1 }}>
+                        {location}
+                    </Typography>
+                    <Typography variant="caption">
+                        {timeLine} left
+                    </Typography>
+                </Box>
+                <LinearProgress variant="determinate" value={progressbarPercent} />
+                <Box display="flex" justifyContent="space-between">
+                    <Typography variant="caption" align="right" width="100%">
+                        ${fundingProgress} more to go
+                    </Typography>
+                </Box>
+                <Box>
+                    <Button variant='contained' >
+                        View Loan
+                    </Button>
+                </Box>
+            </CardContent>
+        </Card>
+    )
+}
+
+// function BorrowerCardWithProgress({imgPath,cardTitle,location,timeLine,progressBarPercent,fundingProgress}}) {
+//     return (
+//         <Card>
+//             <CardMedia
+//                 component="img"
+//                 image="../../../public/free-images.avif"
+//                 alt="Borrower Img"
+//             />
+//             <CardContent sx={{ px: 2, pt: 2 }}>
+//                 <Typography variant="body2">
+//                     Help Tanya build her small fishing business
+//                 </Typography>
+//                 <Box mb="1rem" mt="1rem" display='flex' justifyContent='space-between' alignItems="center">
+//                     <Typography variant="caption" sx={{ flexGrow: 1 }}>
+//                         Bukedea, Uganda
+//                     </Typography>
+//                     <Typography variant="caption">
+//                         xx days left
+//                     </Typography>
+//                 </Box>
+//                 <LinearProgress variant="determinate" value={50} />
+//                 <Box display="flex" justifyContent="space-between">
+//                     <Typography variant="caption" align="right" width="100%">
+//                         $400 more to go
+//                     </Typography>
+//                 </Box>
+//                 <Box>
+//                     <Button variant='contained' >
+//                         View Loan
+//                     </Button>
+//                 </Box>
+//             </CardContent>
+//         </Card>
+//     )
+// }
+
 export default BorrowerCard;
 
-export {BorrowerCardWithProgress};
+export { BorrowerCardWithProgress };

@@ -26,7 +26,7 @@ function SearchDialog(props){
     };
 
     function handleReset(){
-        handleBusiness([])
+        setBusiness([])
     }
 
     return (
@@ -41,9 +41,11 @@ function SearchDialog(props){
         Filter - Loan Search
         </DialogTitle>
         {/* should have some paddings here */}
-        <Typography variant="body2" gutterBottom>
-        I want to support someone with a loan for
-        </Typography>
+        <Box textAlign="center">
+            <Typography variant="body2" gutterBottom>
+            I want to support someone with a loan for
+            </Typography>
+        </Box>
         <ToggleButtonGroupForBusinesses 
         FilterButtonBusinesses={FilterButtonBusinesses}
         business={business}

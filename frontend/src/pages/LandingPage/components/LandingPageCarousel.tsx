@@ -1,38 +1,45 @@
-import React from 'react';
 import Carousel from 'react-material-ui-carousel'
-import { Paper, Button } from '@mui/material'
+import BorrowerCard from './BorrowerCard'
 
-const items = [
+const LoanPofileTest = [
     {
-        name: "Random Name #1",
-        description: "Probably the most random thing you have ever seen!"
+        imgPath: "../../../public/lilac_nature_flower_purple.jpg",
+        loanDescription: "“ I’m a 32-year old mother of three with a dream to build my own tailoring business so I can support my family.”",
+        localtionDescription:"-Monal, Clothing shop owner in Uganda"
     },
     {
-        name: "Random Name #2",
-        description: "Hello World!"
+        imgPath: "../../../public/lilac_blossom_bloom_white_0.jpg",
+        loanDescription: "“ I’m a 33-year old mother of three with a dream to build my own tailoring business so I can support my family.”",
+        localtionDescription:"-Monal, Clothing shop owner in Uganda"
+    },
+    {
+        imgPath: "../../../public/lilac_flower_spring_blossom.jpg",
+        loanDescription: "“ I’m a 34-year old mother of three with a dream to build my own tailoring business so I can support my family.”",
+        localtionDescription:"-Monal, Clothing shop owner in Uganda"
     }
 ]
 
 
-function Item(props)
-{
-    return (
-        <Paper>
-            <h2>{props.item.name}</h2>
-            <p>{props.item.description}</p>
-
-            <Button className="CheckButton">
-                Check it out!
-            </Button>
-        </Paper>
-    )
-}
-
 function LandPageCarousel(){
     return (
-        <Carousel>
+        <Carousel 
+        navButtonsAlwaysVisible={true}
+        activeIndicatorIconButtonProps={{
+            style: {
+                border: "transparent",
+                backgroundColor: "transparent"
+            }
+        }}
+        indicatorIconButtonProps={{
+            style: {
+                border: "transparent"
+            }
+        }}
+        animation={"slide"}
+        duration={800}
+        >
             {
-                items.map( (item, i) => <Item key={i} item={item} /> )
+                LoanPofileTest.map( (item, i) => <BorrowerCard key={i} LoanPofile={item} /> )
             }
         </Carousel>
     )

@@ -1,20 +1,31 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import IconButton from '@mui/material/IconButton';
 import { Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import SearchDialog from './components/SearchDialog';
 import Divider from '@mui/material/Divider';
 import Avatar from '@mui/material/Avatar';
-import BorrowerCard, { BorrowerCardWithProgress } from './components/BorrowerCard';
+import { BorrowerCardWithProgress } from './components/BorrowerCard';
 import ToggleButtonGroupForBusinesses from './components/ToggleButtonForBusinesses';
-// import LandPageCarousel from './components/landingPageCarousel';
+import LandPageCarousel from './components/LandingPageCarousel';
+import SortFilterPopover from './components/SortFilterPopper';
+
+
 // should import from data, dont know how to do that currently :(
-// 
+// testing area-----------------------------------
+const LoanPofileTest = {
+    imgPath:"../../../public/free-images.avif",
+    loanTitle:"Help Tanya build her small fishing business",
+    location:"Bukedea, Uganda",
+    timeLine:"xx days",
+    progressbarPercent:50,
+    fundingProgress:"400"
+}
+
+//testing area ends-----------------------------------
   
 
-function Landingpages(){
+function Landingpage(){
     const [open, setOpen] = React.useState(false);
   
     const handleClickOpen = () => {
@@ -30,19 +41,13 @@ function Landingpages(){
       setBusiness(newBusiness);
     };
 
-    const [sortOpen,setSortOpen] = React.useState(false);
-
-    const handleClickSortButton = ()=>{
-        setSortOpen(!sortOpen)
-    }
-
-    // testing area starts
+    // testing area starts---------------
     const numLoans = 1
 
-    // testing area ends
+    // testing area ends-----------------
 
     return (
-        <Box elevation={0}>
+        <Box>
             <Box mb='0.5rem'>
                 <Typography variant='h1' gutterBottom>
                     Lend as little as $25 to help make a dream come true
@@ -96,7 +101,8 @@ function Landingpages(){
                 </Box>
                 <Box mt='1rem' mb='1rem'>
                     {/* just leave a singe card here for now */}
-                    <BorrowerCard />
+                    <LandPageCarousel />
+                    {/* <BorrowerCard /> */}
                 </Box>
             </Box>
             <Divider />
@@ -111,12 +117,12 @@ function Landingpages(){
                         Lend the last few dollars they need
                     </Typography>
                 </Box>
-                <Box mt='1rem' mb='1rem'>
+                <Box mt='1rem' mb='1rem' textAlign="center">
                     <Typography variant='caption'>
                         I want to support someone with a loan for
                     </Typography>
                 </Box>
-                <Box mt='1rem' mb='1rem' elevation={0}>
+                <Box mt='1rem' mb='1rem'>
                     <ToggleButtonGroupForBusinesses 
                     FilterButtonBusinesses={[{id:1,text:"Any business type"} , {id:2,text:"Medical"} , {id:3,text:"Colthing"} ,{id:4,text:"Grocery"}, {id:5,text:"Emergency"},{id:6,text:"Education"},{id:7,text:"Others"}]}
                     business={business}
@@ -129,14 +135,12 @@ function Landingpages(){
                             Total {numLoans} borrowers
                         </Typography>
                     </Box>
-                    <IconButton aria-label="Sort">
-                        <FilterListIcon />
-                    </IconButton>
+                    <SortFilterPopover />
                 </Box>
                 {/* single card and a filter */}
                 {/* filter working on progress */}
                 <Box>
-                    <BorrowerCardWithProgress />
+                    <BorrowerCardWithProgress LoanPofile={LoanPofileTest}/>
                 </Box>
                 <Box textAlign="center" mt="2rem" mb="7rem">
                     <Button variant="outlined">
@@ -157,4 +161,4 @@ function Landingpages(){
     )
 }
 
-export default Landingpages
+export default Landingpage
