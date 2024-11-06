@@ -11,7 +11,7 @@ import SortFilterPopover from './components/SortFilterPopper';
 // testing area-----------------------------------
 const BorrowerCardPofileForTest = {
     imgPath:"../../../public/free-images.avif",
-    cardTitle:"Help Tanya build her small fishing business",
+    loanTitle:"Help Tanya build her small fishing business",
     location:"Bukedea, Uganda",
     timeLine:"xx days left",
     progressbarPercent:50,
@@ -61,7 +61,7 @@ function LoanSearchPage(){
                 <SortFilterPopover />
             </Box>
             <Box>
-                <BorrowerCardWithProgress BorrowerCardPofile={BorrowerCardPofileForTest}/>
+                <BorrowerCardWithProgress LoanPofile={BorrowerCardPofileForTest}/>
             </Box>
             <Box textAlign="center" mt="2rem" mb="7rem">
                 <Button variant="outlined">

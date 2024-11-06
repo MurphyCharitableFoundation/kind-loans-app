@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     element: <AppWrapper children={<LandingPage />} title="" />,
   },
   {
-    path: "/landing/Search",
+    path: "/landing/search",
     element: <AppWrapper children={<LoanSearchPage />} title="" />,
   },
   {
