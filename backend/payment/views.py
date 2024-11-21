@@ -1,13 +1,17 @@
 """
 Views for Payment
 """
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 from core.models import User, LoanProfile
-from transaction.services import create_paypal_transaction, execute_paypal_transaction
+from transaction.services import (
+    create_paypal_transaction,
+    execute_paypal_transaction,
+)
 
 
 class CreatePayPalPaymentView(APIView):
@@ -40,7 +44,7 @@ class ExecutePayPalPaymentView(APIView):
         payer_id = request.GET.get("PayerID")
 
         try:
-            execute_paypal_transaction(payment_id, payer_id)    # -> payment
+            execute_paypal_transaction(payment_id, payer_id)  # -> payment
 
             return Response(
                 {"message": "Payment completed successfully"}, status=200
