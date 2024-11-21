@@ -53,8 +53,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=255, unique=True, help_text="The email address of the user."
     )
-    name = models.CharField(
-        max_length=255, help_text="The full name of the user."
+    first_name = models.CharField(
+        max_length=255, help_text="The first name of the user."
+    )
+    last_name = models.CharField(
+        max_length=255, help_text="The last name of the user."
     )
     is_active = models.BooleanField(
         default=True,
@@ -92,8 +95,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     business_type = models.CharField(
         max_length=255, blank=True, help_text="The user's business type."
     )
-    interests = models.TextField(
-        blank=True, help_text="The interests of the user."
+    interests = models.JSONField(
+        blank=True, default=list, help_text="The interests of the user."
     )
     photoURL = models.URLField(
         blank=True, help_text="The URL of the user's photo."

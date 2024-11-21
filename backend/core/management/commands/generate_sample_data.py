@@ -35,7 +35,8 @@ class Command(BaseCommand):
             first, last = list(map(str.lower, name.split()))[:2]
 
             user = get_user_model().objects.create_user(
-                name=name,
+                first_name=first,
+                last_name=last,
                 email=f"{first}.{last}@example.com",
                 password=fake.name(),
                 role=models.UserRole.LENDER,
@@ -51,7 +52,8 @@ class Command(BaseCommand):
             first, last = list(map(str.lower, name.split()))[:2]
 
             user = get_user_model().objects.create_user(
-                name=name,
+                first_name=first,
+                last_name=last,
                 email=f"{first}.{last}@example.com",
                 password=fake.name(),
             )
