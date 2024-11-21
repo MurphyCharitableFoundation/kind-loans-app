@@ -1,3 +1,6 @@
+"""
+URLs for Payment
+"""
 from django.urls import path
 from .views import (
     CreatePayPalPaymentView,

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "cities_light",
     "loan_profile",
     "payment",
+    "payment_view",
     "corsheaders",
 ]
 

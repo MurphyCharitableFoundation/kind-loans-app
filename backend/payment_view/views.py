@@ -1,8 +1,13 @@
+"""
+Views for Payment
+"""
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
 
-from core.paypal_handler import PayPalPaymentHandler
+from core.models import User, LoanProfile
+from payment.services import create_paypal_transaction, execute_paypal_transaction
 
 
 class CreatePayPalPaymentView(APIView):
@@ -13,11 +18,11 @@ class CreatePayPalPaymentView(APIView):
         return_url = request.build_absolute_uri(reverse("execute-payment"))
         cancel_url = request.build_absolute_uri(reverse("cancel-payment"))
 
-        handler = PayPalPaymentHandler()
-
         try:
-            payment, transaction = handler.create_payment(
-                payer_id, recipient_id, amount, return_url, cancel_url
+            payer = get_object_or_404(User, pk=payer_id)
+            recipient = get_object_or_404(LoanProfile, pk=recipient_id)
+            payment, transaction = create_paypal_transaction(
+                payer, recipient, amount, return_url, cancel_url
             )
             # Return the PayPal approval URL to the frontend
             for link in payment.links:
@@ -34,14 +39,12 @@ class ExecutePayPalPaymentView(APIView):
         payment_id = request.GET.get("paymentId")
         payer_id = request.GET.get("PayerID")
 
-        handler = PayPalPaymentHandler()
         try:
-            handler.execute_payment(payment_id, payer_id)  # -> payment
+            execute_paypal_transaction(payment_id, payer_id)    # -> payment
 
             return Response(
                 {"message": "Payment completed successfully"}, status=200
             )
-
         except Exception as e:
             return Response({"error": str(e)}, status=400)
 
