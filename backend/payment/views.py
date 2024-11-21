@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.shortcuts import get_object_or_404
 
 from core.models import User, LoanProfile
-from payment.services import create_paypal_transaction, execute_paypal_transaction
+from transaction.services import create_paypal_transaction, execute_paypal_transaction
 
 
 class CreatePayPalPaymentView(APIView):

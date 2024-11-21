@@ -12,7 +12,7 @@ from decimal import Decimal
 from django.utils import timezone
 from cities_light.models import Country, City
 
-from payment.models import Transaction
+from transaction.models import Transaction
 
 
 class UserManager(BaseUserManager):

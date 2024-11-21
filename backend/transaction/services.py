@@ -1,5 +1,5 @@
-from payment.models import Transaction, TransactionStatus
-from payment.utils import configure_paypal
+from transaction.models import Transaction, TransactionStatus
+from transaction.utils import configure_paypal
 from paypalrestsdk import Payment
 
 from django.core.exceptions import ObjectDoesNotExist
