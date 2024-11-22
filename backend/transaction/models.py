@@ -34,9 +34,7 @@ class PaymentMethod(models.IntegerChoices):
 class TransactionManager(models.Manager):
     """Manager for transactions."""
 
-    def create_transaction(
-        self, payer, recipient, payment_id, amount, **extra_fields
-    ):
+    def create_transaction(self, payer, recipient, amount, **extra_fields):
         """Create, save, and return a new transaction."""
         payer_content_type = ContentType.objects.get_for_model(payer)
         recipient_content_type = ContentType.objects.get_for_model(recipient)
@@ -47,7 +45,6 @@ class TransactionManager(models.Manager):
             recipient_content_type=recipient_content_type,
             recipient_object_id=recipient.id,
             amount=amount,
-            payment_id=payment_id,
             **extra_fields,
         )
         transaction.save(using=self._db)
@@ -92,7 +89,9 @@ class Transaction(TimeStampedModel):
         "recipient_content_type", "recipient_object_id"
     )
 
-    payment_id = models.CharField(max_length=100, unique=True)
+    payment_id = models.CharField(
+        max_length=100, unique=True, null=True, blank=True, default=None
+    )
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,

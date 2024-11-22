@@ -6,8 +6,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from core import models
-from payment.models import Transaction, TransactionStatus
-from core.utils import generate_unique_code
+from transaction.services import create_transaction, TransactionStatus
 
 from decimal import Decimal
 
@@ -147,11 +146,10 @@ class TransactionModelTests(TestCase):
         Test amount lended to date for loan profile
         with pending transactions is zero.
         """
-        Transaction.objects.create_transaction(
+        create_transaction(
             payer=self.lender,
             recipient=self.loan_profile_with_transactions,
             amount=100,
-            payment_id=generate_unique_code(),
             status=TransactionStatus.PENDING,
         )
 
@@ -170,11 +168,10 @@ class TransactionModelTests(TestCase):
             if status != TransactionStatus.COMPLETED
         ]
         for status in NONTRANSACTION_STATUSES:
-            Transaction.objects.create_transaction(
+            create_transaction(
                 payer=self.lender,
                 recipient=self.loan_profile_with_transactions,
                 amount=100,
-                payment_id=generate_unique_code(),
                 status=status,
             )
 
@@ -187,18 +184,16 @@ class TransactionModelTests(TestCase):
         Test amount lended to date for loan profile
         with completed transactions.
         """
-        Transaction.objects.create_transaction(
+        create_transaction(
             payer=self.lender,
             recipient=self.loan_profile_with_transactions,
             amount=100,
-            payment_id=generate_unique_code(),
             status=TransactionStatus.COMPLETED,
         )
-        Transaction.objects.create_transaction(
+        create_transaction(
             payer=self.lender,
             recipient=self.loan_profile_with_transactions,
             amount=100,
-            payment_id=generate_unique_code(),
             status=TransactionStatus.COMPLETED,
         )
 

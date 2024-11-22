@@ -5,10 +5,18 @@ from paypalrestsdk import Payment
 from django.core.exceptions import ObjectDoesNotExist
 
 
-def create_transaction(amount, payer, recipient, payment_id):
+def get_amount_received(party):
+    """
+    Amount received by party
+    where party is payer or recipient
+    """
+    return Transaction.objects.amount_received(party)
+
+
+def create_transaction(payer, recipient, amount, **extra_fields):
     """Create a transaction within the app."""
     return Transaction.objects.create_transaction(
-        amount, payer, recipient, payment_id
+        payer, recipient, amount, **extra_fields
     )
 
 
@@ -38,10 +46,10 @@ def create_paypal_transaction(
     payment = Payment(payment_data)
 
     if payment.create():
-        transaction = Transaction.objects.create(
-            amount=amount,
+        transaction = create_transaction(
             payer=payer,
             recipient=recipient,
+            amount=amount,
             payment_id=payment.id,
             status=TransactionStatus.PENDING,
         )

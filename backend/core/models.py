@@ -12,7 +12,7 @@ from decimal import Decimal
 from django.utils import timezone
 from cities_light.models import Country, City
 
-from transaction.models import Transaction
+from transaction.services import get_amount_received
 
 
 class UserManager(BaseUserManager):
@@ -180,7 +180,7 @@ class LoanProfile(models.Model):
 
     @property
     def amount_lended_to_date(self):
-        transaction_total = Transaction.objects.amount_received(self)
+        transaction_total = get_amount_received(self)
 
         return (
             transaction_total.quantize(Decimal("0.00"))
