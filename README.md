@@ -39,3 +39,13 @@
     - while gathering funds
     - after funds are gathered
 - backend: is loan duration related to loan-deadline?
+
+- paypal-integration:
+    Paypal Developer has a few [APIs](https://developer.paypal.com/api/rest/current-resources/) that we can work with.
+
+    Both these examples need you to create a paypal dev account and transactions
+    can be mocked in the Paypal Sandbox:
+    - [backend integration example](https://www.youtube.com/watch?v=IXxEdhA7fig)
+    - [frontend integration example](https://www.youtube.com/watch?v=f7NWToOjtKI)
+
+    [Project specific paypal integration material available](./PAYPAL-INTEGRATION-NOTES.md)

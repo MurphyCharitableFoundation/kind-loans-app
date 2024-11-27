@@ -1,10 +1,12 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
+from core import models
+from payment.models import Transaction, TransactionStatus
+from core.utils import generate_unique_code
+
 from faker import Faker
 from datetime import timedelta
-
-from core import models
 
 
 class Command(BaseCommand):
@@ -30,7 +32,7 @@ class Command(BaseCommand):
         # fake-lenders
         for _ in range(LENDER_COUNT):
             name = fake.name()
-            first, last = list(map(str.lower, name.split()))
+            first, last = list(map(str.lower, name.split()))[:2]
 
             user = get_user_model().objects.create_user(
                 name=name,
@@ -46,7 +48,7 @@ class Command(BaseCommand):
         # fake-borrowers & loan-profiles
         for _ in range(BORROWER_COUNT):
             name = fake.name()
-            first, last = list(map(str.lower, name.split()))
+            first, last = list(map(str.lower, name.split()))[:2]
 
             user = get_user_model().objects.create_user(
                 name=name,
@@ -84,13 +86,14 @@ class Command(BaseCommand):
         for lender in random_lenders:
             for loan_profile in random_loan_profiles:
                 for n in range(fake.random_number(digits=1)):
-                    models.Transaction.objects.create_transaction(
-                        lender=lender,
-                        borrower=loan_profile,
+                    Transaction.objects.create_transaction(
+                        payer=lender,
+                        recipient=loan_profile,
+                        payment_id=generate_unique_code(),
                         amount=fake.pydecimal(
                             left_digits=3, right_digits=2, positive=True
                         ),
-                        status=models.TransactionStatus.COMPLETED,
+                        status=TransactionStatus.COMPLETED,
                     )
 
         self.stdout.write(

@@ -31,4 +31,5 @@ urlpatterns = [
     ),
     path("user/", include("user.urls")),
     path("", include("loan_profile.urls")),
+    path("payment/", include("payment.urls")),
 ]

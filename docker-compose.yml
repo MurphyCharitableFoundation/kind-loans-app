@@ -18,6 +18,10 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - PAYPAL_CLIENT_ID=${PAYPAL_CLIENT_ID}
+      - PAYPAL_SECRET_KEY=${PAYPAL_SECRET_KEY}
+      - PAYPAL_BASE_URL=${PAYPAL_BASE_URL}
+      - PAYPAL_MODE=${PAYPAL_MODE}
     depends_on:
       - db
 
