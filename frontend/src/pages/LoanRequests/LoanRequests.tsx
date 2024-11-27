@@ -3,7 +3,6 @@ import { Box } from "@mui/material";
 import LoanProfileCard from "../../components/LoanProfileCard";
 import LoanProfile from "../../types/LoanProfile";
 
-
 function LoanRequests() {
   const { data, error, isLoading } = useQuery<LoanProfile[]>({
     queryKey: ["loan-profiles"],

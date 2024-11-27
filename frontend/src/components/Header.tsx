@@ -10,7 +10,6 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import profilePic from "../assets/dummypic.png";
 import SectionTitle from "./SectionTitle";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
@@ -19,9 +18,13 @@ import { setToken } from "../features/auth/authSlice";
 import { RootState } from "../store";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
+import { AdvancedImage } from "@cloudinary/react";
+import { lazyload } from "@cloudinary/react";
+import { fill } from "@cloudinary/url-gen/actions/resize";
 
 function Header({ sectionTitle }: { sectionTitle: string }) {
   const dispatch = useDispatch();
+  const myCld = useSelector((state: RootState) => state.cloudinary.myCld);
   const token = useSelector((state: RootState) => state.auth.token);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -39,8 +42,12 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
     toast.success("Signed out successfully");
   };
 
+  const img = myCld
+    .image("dummypic_bnhuiy")
+    .resize(fill().width(40).height(40));
+
   return (
-    <AppBar position="sticky" elevation={0}>
+    <AppBar position="sticky" elevation={4}>
       <Container maxWidth="lg" sx={{ p: 0 }}>
         <Toolbar disableGutters sx={{ px: 2 }}>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -87,7 +94,9 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
                   onClick={handleOpenUserMenu}
                   sx={{ p: 0, borderRadius: "50%" }}
                 >
-                  <Avatar alt="Remy Sharp" src={profilePic} />
+                  <Avatar alt="Remy Sharp">
+                    <AdvancedImage cldImg={img} plugins={[lazyload()]} />
+                  </Avatar>
                 </IconButton>
               </Tooltip>
               <Menu

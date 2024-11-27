@@ -14,7 +14,7 @@ export default function SectionTitle({ title }: { title: string }) {
         borderColor: "divider",
         borderRadius: 0,
       }}
-      elevation={4}
+      elevation={0}
     >
       <Typography variant="h6" component="h6" sx={{ px: 2 }}>
         {title}
