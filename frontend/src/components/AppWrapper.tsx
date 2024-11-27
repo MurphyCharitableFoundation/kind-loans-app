@@ -1,6 +1,8 @@
 import { Container } from "@mui/material";
 import BottomNavBar from "./BottomNavBar";
 import Header from "./Header";
+import { useSelector } from "react-redux";
+
 
 export default function AppWrapper({
   title,
