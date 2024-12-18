@@ -1,28 +1,14 @@
-from transaction.models import Transaction, TransactionStatus
+from transaction.models import ExternalPayment
 from transaction.utils import configure_paypal
-from paypalrestsdk import Payment
+from paypalrestsdk import Payment, Payout
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
+
+from datetime import datetime
 
 
-def get_amount_received(party):
-    """
-    Amount received by party
-    where party is payer or recipient
-    """
-    return Transaction.objects.amount_received(party)
-
-
-def create_transaction(payer, recipient, amount, **extra_fields):
-    """Create a transaction within the app."""
-    return Transaction.objects.create_transaction(
-        payer, recipient, amount, **extra_fields
-    )
-
-
-def create_paypal_transaction(
-    payer, recipient, amount, return_url, cancel_url
-):
+def create_paypal_transaction(payer, amount, return_url, cancel_url):
     """Create a real-money transaction with PayPal"""
     configure_paypal()
 
@@ -32,8 +18,8 @@ def create_paypal_transaction(
         "transactions": [
             {
                 "amount": {
-                    "total": f"{amount:.2f}",
-                    "currency": "USD",
+                    "total": f"{amount.amount:.2f}",
+                    "currency": amount.currency.code,
                 },
                 "description": "Payment transaction description",
             }
@@ -46,19 +32,17 @@ def create_paypal_transaction(
     payment = Payment(payment_data)
 
     if payment.create():
-        transaction = create_transaction(
-            payer=payer,
-            recipient=recipient,
+        ExternalPayment.objects.create(
+            gateway_payment_id=payment.id,
             amount=amount,
-            payment_id=payment.id,
-            status=TransactionStatus.PENDING,
+            user=payer,
         )
-        return payment, transaction
+        return payment, None
     else:
         raise Exception(payment.error)
 
 
-def execute_paypal_transaction(payment_id, payer_id):
+def execute_paypal_transaction(payment_id, payer_id, payment_func):
     """Execute a real-money transaction with PayPal"""
     configure_paypal()
 
@@ -66,12 +50,52 @@ def execute_paypal_transaction(payment_id, payer_id):
 
     if payment.execute({"payer_id": payer_id}):
         try:
-            transaction = Transaction.objects.get(payment_id=payment_id)
-            transaction.status = TransactionStatus.COMPLETED
-            transaction.save()
+            external_payment = ExternalPayment.objects.get(
+                gateway_payment_id=payment_id
+            )
+            external_payment.transaction = payment_func(
+                external_payment.user, external_payment.amount
+            )
+            external_payment.status = "COMPLETED"
+            external_payment.save()
+
+            return payment
         except ObjectDoesNotExist:
             raise ValueError("Transaction not found for the given payment ID.")
-
-        return payment
     else:
         raise Exception(payment.error)
+
+
+def execute_paypal_payout_transaction(payee, amount, payout_func):
+    """Execute a real-money payout transaction to email"""
+    configure_paypal()
+
+    payout = Payout(
+        {
+            "sender_batch_header": {
+                "sender_batch_id": f"user_{payee.id}_time_{datetime.now()}",
+                "email_subject": f"Payment from {settings.MCF_APP_NAME}",
+                "email_message": "Thanks for using our service!",
+            },
+            "items": [
+                {
+                    "recipient_type": "EMAIL",
+                    "amount": {
+                        "value": f"{amount.amount:.2f}",
+                        "currency": amount.currency.code,
+                    },
+                    "receiver": payee.email,
+                    "note": "Thanks for your patronage!",
+                    "sender_item_id": "item_000",
+                }
+            ],
+        }
+    )
+
+    if payout.create(sync_mode=False):
+        # sync_mode=False for delayed/async confirmation
+        print("Payout created successfully")
+        print("Payout ID:", payout.batch_header.payout_batch_id)
+        payout_func(payee, amount)
+    else:
+        raise Exception(payout.error)

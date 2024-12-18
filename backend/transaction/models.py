@@ -1,9 +1,8 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.core.exceptions import ValidationError
-
 from model_utils.models import TimeStampedModel
+from hordak.models import Transaction
+from djmoney.models.fields import MoneyField
 
 
 class TransactionStatus(models.IntegerChoices):
@@ -31,100 +30,66 @@ class PaymentMethod(models.IntegerChoices):
     CRYPTOCURRENCY = 9, "Cryptocurrency"
 
 
-class TransactionManager(models.Manager):
-    """Manager for transactions."""
+class ExternalPayment(TimeStampedModel):
+    PAYMENT_STATUSES = [
+        ("PENDING", "Pending"),
+        ("COMPLETED", "Completed"),
+        ("FAILED", "Failed"),
+        ("CANCELLED", "Cancelled"),
+    ]
 
-    def create_transaction(self, payer, recipient, amount, **extra_fields):
-        """Create, save, and return a new transaction."""
-        payer_content_type = ContentType.objects.get_for_model(payer)
-        recipient_content_type = ContentType.objects.get_for_model(recipient)
+    PLATFORM_CHOICES = [
+        ("PAYPAL", "PayPal"),
+        ("STRIPE", "Stripe"),
+        ("OTHER", "Other"),
+    ]
 
-        transaction = self.model(
-            payer_content_type=payer_content_type,
-            payer_object_id=payer.id,
-            recipient_content_type=recipient_content_type,
-            recipient_object_id=recipient.id,
-            amount=amount,
-            **extra_fields,
-        )
-        transaction.save(using=self._db)
-
-        return transaction
-
-    def amount_received(self, entity):
-        entity_content_type = ContentType.objects.get_for_model(entity)
-
-        result = self.filter(
-            recipient_content_type=entity_content_type,
-            recipient_object_id=entity.id,
-            status=TransactionStatus.COMPLETED,
-        ).aggregate(total=models.Sum("amount"))
-
-        return result["total"] or 0
-
-
-# TODO:
-# + currency
-# + on-delete: transactions cannot be deleted for audit reasons
-#   instead prevent delete on user object or loanprofile, resort to
-#   hiding/making inactive
-class Transaction(TimeStampedModel):
-    """Transaction model."""
-
-    payer_content_type = models.ForeignKey(
-        ContentType,
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="payer_transactions",
+        related_name="external_payments",
+        help_text="The user who initiated the payment.",
     )
-    payer_object_id = models.PositiveIntegerField()
-    payer = GenericForeignKey("payer_content_type", "payer_object_id")
-
-    recipient_content_type = models.ForeignKey(
-        ContentType,
+    platform = models.CharField(
+        max_length=20,
+        default="PAYPAL",
+        choices=PLATFORM_CHOICES,
+        help_text="The external payment platform used.",
+    )
+    gateway_payment_id = models.CharField(max_length=255, unique=True)
+    transaction = models.OneToOneField(
+        Transaction,
         on_delete=models.CASCADE,
-        related_name="recipient_transactions",
+        related_name="external_payment",
+        null=True,
+        blank=True,
     )
-    recipient_object_id = models.PositiveIntegerField()
-    recipient = GenericForeignKey(
-        "recipient_content_type", "recipient_object_id"
-    )
-
-    payment_id = models.CharField(
-        max_length=100, unique=True, null=True, blank=True, default=None
-    )
-    amount = models.DecimalField(
-        max_digits=10,
+    amount = MoneyField(
+        max_digits=14,
         decimal_places=2,
-        help_text="The amount for the transaction.",
+        default_currency="USD",
     )
-    payment_method = models.IntegerField(
-        choices=PaymentMethod.choices,
-        default=PaymentMethod.PAYPAL,
-        help_text="The method of payment for the transaction.",
+    status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUSES,
+        default="PENDING",
+        help_text="The status of the payment.",
     )
-    status = models.IntegerField(
-        choices=TransactionStatus.choices,
-        default=TransactionStatus.PENDING,
-        help_text="The status of the transaction.",
-    )
-
-    objects = TransactionManager()
 
     class Meta:
-        verbose_name = "Transaction"
-        verbose_name_plural = "Transactions"
+        verbose_name = "External Payment"
+        verbose_name_plural = "External Payments"
         ordering = ["-created"]
 
     def __str__(self):
-        return f"{self.payer} ----({self.amount})----> {self.recipient}"
+        return (
+            f"{self.platform} payment by {self.user} - {self.transaction_id}"
+        )
 
-    def save(self, *args, **kwargs):
-        if self.amount < 0:
-            raise ValueError("Transaction amount cannot be negative.")
-        super().save(*args, **kwargs)
+    def mark_as_completed(self):
+        self.status = "COMPLETED"
+        self.save()
 
-    def delete(self, *args, **kwargs):
-        raise ValidationError("Transaction cannot be deleted.")
-
-    def delete_queryset(self, qs, *args, **kwargs):
-        raise ValidationError("Bulk deletion is not allowed for Transactions.")
+    def mark_as_failed(self):
+        self.status = "FAILED"
+        self.save()
