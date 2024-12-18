@@ -5,11 +5,9 @@ Tests for models.
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
-from core import models
-from payment.models import Transaction, TransactionStatus
-from core.utils import generate_unique_code
+from core import models, helpers
 
-from decimal import Decimal
+from djmoney.money import Money
 
 
 class ModelTests(TestCase):
@@ -61,147 +59,140 @@ class ModelTests(TestCase):
             description="Test description",
             business_type=1,
             loan_duration_months=12,
-            total_amount_required=Decimal("500.00"),
+            total_amount_required=Money("500.00", "USD"),
             deadline_to_receive_loan="2021-12-31",
             status=1,
         )
-        self.assertEqual(str(loan_profile), f"{user.name}'s loan profile")
+        self.assertEqual(
+            str(loan_profile), f"{user.name}'s {loan_profile.title}"
+        )
 
 
-class TransactionModelTests(TestCase):
-    """
-    LP - loan profile
-    ALTD - amount lended to date
-    T - transaction
-    """
+class ContributionModelTests(TestCase):
+    """ """
 
     def setUp(self):
         password = "testpass123"
 
-        self.user_with_two_loan_profiles = (
-            get_user_model().objects.create_user(
-                email="test@example.com", password=password
-            )
+        self.borrower_user = get_user_model().objects.create_user(
+            email="borrower@example.com", password=password
+        )
+        self.borrower_target_100 = models.LoanProfile.objects.create(
+            user=self.borrower_user,
+            photoURL="www.example.com/photo.jpg",
+            description="loan profile 1",
+            business_type=1,
+            loan_duration_months=12,
+            total_amount_required=Money(100, "USD"),
+            deadline_to_receive_loan="2021-12-31",
+            status=1,
         )
 
-        self.loan_profile_with_transactions = (
-            models.LoanProfile.objects.create(
-                user=self.user_with_two_loan_profiles,
-                photoURL="www.example.com/photo.jpg",
-                description="loan profile 1",
-                business_type=1,
-                loan_duration_months=12,
-                total_amount_required=Decimal("500.00"),
-                deadline_to_receive_loan="2021-12-31",
-                status=1,
-            )
-        )
-        self.loan_profile_without_transactions = (
-            models.LoanProfile.objects.create(
-                user=self.user_with_two_loan_profiles,
-                photoURL="www.example.com/photo.jpg",
-                description="loan profile 2",
-                business_type=2,
-                loan_duration_months=12,
-                total_amount_required=Decimal("500.00"),
-                deadline_to_receive_loan="2021-12-31",
-                status=1,
-            )
-        )
         self.lender = get_user_model().objects.create_user(
             email="lender@example.com",
             password=password,
             role=models.UserRole.LENDER,
+            amount_available=Money(50, "USD"),
         )
-        self.non_lender = get_user_model().objects.create_user(
-            email="nonlender@example.com",
+
+    def test_lender_can_contribute_to_borrower(self):
+        """
+        Test that a lender can contribute to loan_profile
+        """
+        initial_amount_available = self.lender.amount_available
+        amount_contributed = Money(25, "USD")
+
+        contribution = helpers.make_contribution(
+            self.lender, self.borrower_target_100, Money(25, "USD")
+        )
+        self.assertEqual(self.lender, contribution.lender)
+        self.assertEqual(self.borrower_target_100, contribution.loan_profile)
+        self.assertEqual(
+            self.lender.amount_available,
+            initial_amount_available - amount_contributed,
+        )
+
+
+class RepaymentModelTests(TestCase):
+    """ """
+
+    def setUp(self):
+        password = "testpass123"
+
+        self.borrower_user = get_user_model().objects.create_user(
+            email="borrower@example.com", password=password
+        )
+        self.borrower_target_100_repaid_50 = models.LoanProfile.objects.create(
+            user=self.borrower_user,
+            photoURL="www.example.com/photo.jpg",
+            description="loan profile 1",
+            business_type=1,
+            loan_duration_months=12,
+            total_amount_required=Money(100, "USD"),
+            deadline_to_receive_loan="2021-12-31",
+            status=1,
+        )
+
+        self.lender_a = get_user_model().objects.create_user(
+            email="lenderA@example.com",
             password=password,
-            role=models.UserRole.BORROWER,
+            role=models.UserRole.LENDER,
+            amount_available=Money(50, "USD"),
         )
 
-    # def test_nonlender_cannot_initiate_T(self):
-    #    """
-    #    Test that a user that is not a lender
-    #    cannot initiate transaction.
-    #    """
-    #    with self.assertRaises(ValueError):
-    #        Transaction.objects.create_transaction(
-    #            payer=self.non_lender,
-    #            recipient=self.loan_profile_with_transactions,
-    #            amount=100,
-    #            payment_id=generate_unique_code(),
-    #        )
-
-    def test_ALTD_for_LP_without_Ts_is_zero(self):
-        """
-        Test the amount lended to date for a
-        loan profile without any transactions
-        is zero.
-        """
-        self.assertEqual(
-            self.loan_profile_without_transactions.amount_lended_to_date, 0
+        self.lender_b = get_user_model().objects.create_user(
+            email="lenderB@example.com",
+            password=password,
+            role=models.UserRole.LENDER,
+            amount_available=Money(50, "USD"),
         )
 
-    def test_ALTD_for_LP_with_pending_Ts_is_zero(self):
+        self.contribution_a = helpers.make_contribution(
+            self.lender_a, self.borrower_target_100_repaid_50, Money(50, "USD")
+        )
+
+        self.contribution_b = helpers.make_contribution(
+            self.lender_b, self.borrower_target_100_repaid_50, Money(50, "USD")
+        )
+
+    def test_borrower_can_make_single_repayment(self):
         """
-        Test amount lended to date for loan profile
-        with pending transactions is zero.
+        Test that a lender can contribute to loan_profile
         """
-        Transaction.objects.create_transaction(
-            payer=self.lender,
-            recipient=self.loan_profile_with_transactions,
-            amount=100,
-            payment_id=generate_unique_code(),
-            status=TransactionStatus.PENDING,
+        repayment_amount = Money(50, "USD")
+        repayment = helpers.make_repayment(
+            self.borrower_target_100_repaid_50, repayment_amount
         )
 
         self.assertEqual(
-            self.loan_profile_with_transactions.amount_lended_to_date, 0
+            self.borrower_target_100_repaid_50, repayment.loan_profile
         )
-
-    def test_ALTD_for_LP_with_incomplete_Ts_is_zero(self):
-        """
-        Test amount lended to date for loan profile
-        with incomplete transactions is zero.
-        """
-        NONTRANSACTION_STATUSES = [
-            status
-            for status in list(TransactionStatus)
-            if status != TransactionStatus.COMPLETED
-        ]
-        for status in NONTRANSACTION_STATUSES:
-            Transaction.objects.create_transaction(
-                payer=self.lender,
-                recipient=self.loan_profile_with_transactions,
-                amount=100,
-                payment_id=generate_unique_code(),
-                status=status,
-            )
-
+        self.assertEqual(repayment_amount, repayment.amount)
         self.assertEqual(
-            self.loan_profile_with_transactions.amount_lended_to_date, 0
+            self.borrower_target_100_repaid_50.repayments.count(), 1
         )
 
-    def test_ALTD_for_LP_with_completed_Ts(self):
+    def test_borrower_can_make_multiple_repayments(self):
         """
-        Test amount lended to date for loan profile
-        with completed transactions.
+        Test that a lender can contribute to loan_profile
         """
-        Transaction.objects.create_transaction(
-            payer=self.lender,
-            recipient=self.loan_profile_with_transactions,
-            amount=100,
-            payment_id=generate_unique_code(),
-            status=TransactionStatus.COMPLETED,
+        repayment_amount_a = Money(20, "USD")
+        repayment_amount_b = Money(30, "USD")
+        repayment_a = helpers.make_repayment(
+            self.borrower_target_100_repaid_50, repayment_amount_a
         )
-        Transaction.objects.create_transaction(
-            payer=self.lender,
-            recipient=self.loan_profile_with_transactions,
-            amount=100,
-            payment_id=generate_unique_code(),
-            status=TransactionStatus.COMPLETED,
+        repayment_b = helpers.make_repayment(
+            self.borrower_target_100_repaid_50, repayment_amount_b
         )
 
         self.assertEqual(
-            self.loan_profile_with_transactions.amount_lended_to_date, 200
+            self.borrower_target_100_repaid_50, repayment_a.loan_profile
+        )
+        self.assertEqual(repayment_amount_a, repayment_a.amount)
+        self.assertEqual(
+            self.borrower_target_100_repaid_50, repayment_b.loan_profile
+        )
+        self.assertEqual(repayment_amount_b, repayment_b.amount)
+        self.assertEqual(
+            self.borrower_target_100_repaid_50.repayments.count(), 2
         )

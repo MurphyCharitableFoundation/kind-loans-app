@@ -2,9 +2,9 @@ from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 
 from core import models
-from payment.models import Transaction, TransactionStatus
-from core.utils import generate_unique_code
+from core import helpers
 
+from djmoney.money import Money
 from faker import Faker
 from datetime import timedelta
 
@@ -28,6 +28,9 @@ class Command(BaseCommand):
         LENDER_COUNT = kwargs["lender_count"]
         BORROWER_COUNT = kwargs["borrower_count"]
         LOAN_PERIOD = timedelta(days=500)
+
+        def get_amount(n=3):
+            return fake.pydecimal(left_digits=3, right_digits=2, positive=True)
 
         # fake-lenders
         for _ in range(LENDER_COUNT):
@@ -86,22 +89,16 @@ class Command(BaseCommand):
         for lender in random_lenders:
             for loan_profile in random_loan_profiles:
                 for n in range(fake.random_number(digits=1)):
-                    Transaction.objects.create_transaction(
-                        payer=lender,
-                        recipient=loan_profile,
-                        payment_id=generate_unique_code(),
-                        amount=fake.pydecimal(
-                            left_digits=3, right_digits=2, positive=True
-                        ),
-                        status=TransactionStatus.COMPLETED,
+                    helpers.make_payment(lender, Money(get_amount(), "USD"))
+                    helpers.make_contribution(
+                        lender, loan_profile, Money(get_amount(2), "USD")
                     )
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                "Created sample transactions between lenders and borrowers."
-            )
-        )
+                loan_profile.get_payment()
+                helpers.make_repayment(
+                    loan_profile, loan_profile.total_raised()
+                )
+                loan_profile.make_payment()
 
-        self.stdout.write(
-            self.style.SUCCESS("Successfully generated samples.")
-        )
+        self.stdout.write(self.style.SUCCESS("Created sample transactions"))
+        self.stdout.write(self.style.SUCCESS("DONE: Generated Samples."))

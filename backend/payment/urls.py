@@ -1,8 +1,13 @@
+"""
+URLs for Payment
+"""
+
 from django.urls import path
 from .views import (
     CreatePayPalPaymentView,
     ExecutePayPalPaymentView,
     CancelPaymentView,
+    ExecutePayPalPayoutView,
 )
 
 urlpatterns = [
@@ -20,5 +25,10 @@ urlpatterns = [
     ),
     path(
         "cancel-payment/", CancelPaymentView.as_view(), name="cancel-payment"
+    ),
+    path(
+        "execute-paypal-payout/",
+        ExecutePayPalPayoutView.as_view(),
+        name="execute-payout",
     ),
 ]

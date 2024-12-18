@@ -6,3 +6,5 @@ django-cities-light>=3.10.0,<3.11
 django-cors-headers>=3.7.0,<3.8
 paypalrestsdk
 django-model-utils
+django-hordak
+django-money

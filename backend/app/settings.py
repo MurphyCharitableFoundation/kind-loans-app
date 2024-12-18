@@ -38,15 +38,22 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "core",
+    # 3rd party
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "mptt",
+    "hordak",
+    "djmoney",
+    "corsheaders",
+    "django_extensions",
+    # Project
+    "core",
     "user",
     "cities_light",
     "loan_profile",
+    "transaction",
     "payment",
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -155,6 +162,9 @@ ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# MCF
+MCF_APP_NAME = "Murphy Charitable Foundation - Kind Loans App"
+
 # Paypal
 PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID")
 PAYPAL_SECRET_KEY = os.environ.get("PAYPAL_SECRET_KEY")
@@ -162,3 +172,6 @@ PAYPAL_BASE_URL = os.environ.get("PAYPAL_BASE_URL")
 PAYPAL_MODE = os.environ.get("PAYPAL_MODE")
 PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL = ""
+
+# Django Money
+SERIALIZATION_MODULES = {"json": "djmoney.serializers"}
