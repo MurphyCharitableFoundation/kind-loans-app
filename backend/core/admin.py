@@ -84,6 +84,7 @@ class UserAdmin(BaseUserAdmin):
 
 
 class LoanProfileAdmin(admin.ModelAdmin):
+    change_form_template = "admin/loan_profile_change_form.html"
     list_display = (
         "__str__",
         "total_amount_required",
@@ -91,9 +92,85 @@ class LoanProfileAdmin(admin.ModelAdmin):
         "sum_of_repayments",
     )
     readonly_fields = (
+        "is_paid_raised_amount",
+        "has_repaid",
         "sum_of_contributions",
         "sum_of_repayments",
     )
+
+    actions = ["get_payment", "make_payment", "apply_repayments"]
+
+    def get_payment(self, request, queryset):
+        if isinstance(queryset, models.LoanProfile):
+            obj = queryset
+            obj.get_payment()
+            updated_count = 1
+        else:
+            list(map(lambda lp: lp.get_payment(), queryset))
+            updated_count = queryset.count()
+
+        msg = "Paid {} borrower(s) from respective contributions.".format(
+            updated_count
+        )
+        self.message_user(request, msg, messages.SUCCESS)
+
+    def make_payment(self, request, queryset):
+        if isinstance(queryset, models.LoanProfile):
+            obj = queryset
+            obj.make_payment()
+            updated_count = 1
+        else:
+            list(map(lambda lp: lp.make_payment(), queryset))
+            updated_count = queryset.count()
+
+        msg = "Made loan repayment for {} borrower(s).".format(updated_count)
+        self.message_user(request, msg, messages.SUCCESS)
+
+    def apply_repayments(self, request, queryset):
+        if isinstance(queryset, models.LoanProfile):
+            obj = queryset
+            obj.apply_repayments()
+            updated_count = 1
+        else:
+            list(map(lambda r: r.apply_repayments(), queryset))
+            updated_count = queryset.count()
+
+        msg = "Applied repayments from {} loan profile(s).".format(
+            updated_count
+        )
+        self.message_user(request, msg, messages.SUCCESS)
+
+    get_payment.short_description = "Get Loan from Lender Contributions"
+    make_payment.short_description = "Make Loan Repayment from Repayments"
+    apply_repayments.short_description = "Apply repayments to Lenders"
+
+    @csrf_protect_m
+    def changeform_view(
+        self, request, object_id=None, form_url="", extra_context=None
+    ):
+        if request.method == "POST":
+            if "_get_payment" in request.POST:
+                obj = self.get_object(request, unquote(object_id))
+                self.get_payment(request, obj)
+                return HttpResponseRedirect(request.get_full_path())
+
+            if "_make_payment" in request.POST:
+                obj = self.get_object(request, unquote(object_id))
+                self.make_payment(request, obj)
+                return HttpResponseRedirect(request.get_full_path())
+
+            if "_apply_repayments" in request.POST:
+                obj = self.get_object(request, unquote(object_id))
+                self.apply_repayments(request, obj)
+                return HttpResponseRedirect(request.get_full_path())
+
+        return admin.ModelAdmin.changeform_view(
+            self,
+            request,
+            object_id=object_id,
+            form_url=form_url,
+            extra_context=extra_context,
+        )
 
     def sum_of_contributions(self, obj):
         return obj.total_raised()

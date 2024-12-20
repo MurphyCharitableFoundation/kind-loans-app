@@ -129,16 +129,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = "email"
 
-    def amount_owed(self):
-        return Money(1, "USD")
-
     def purchase_credits(self, amount):
+        """
+        REAL-MONEY: Purchase credits from application
+        """
         self.amount_available += amount
         self.save()
 
         return lender_to_app(self, amount)
 
     def withdraw_credits(self, amount):
+        """
+        REAL-MONEY: Withdraw credits from application
+        """
         if amount > self.amount_available:
             ValueError("User may not withdraw more than have available.")
 
@@ -257,9 +260,12 @@ class LoanProfile(models.Model):
         """
         return self.total_raised() - self.total_repaid()
 
+    def has_applied_all_repayments(self):
+        return all(r.is_applied for r in self.repayments.all())
+
     def get_payment(self):
         """
-        Get payment from app.
+        REAL-MONEY: Get payment from app.
         """
         self.is_paid_raised_amount = True
         self.save()
@@ -268,7 +274,7 @@ class LoanProfile(models.Model):
 
     def make_payment(self):
         """
-        Make payment to app.
+        REAL-MONEY: Make payment to app.
         """
         self.has_repaid = True
         self.save()
@@ -276,6 +282,13 @@ class LoanProfile(models.Model):
         return borrower_to_app(
             self, self.total_repaid(), self.remaining_balance()
         )
+
+    def apply_repayments(self):
+        """
+        Apply all repayments to contributors proportionally
+        """
+        repayments = self.repayments.all()
+        return list(map(lambda r: r.repay_lenders(), repayments))
 
 
 class Contribution(TimeStampedModel):

@@ -3,16 +3,16 @@ from hordak.models import Account
 
 def config_platform_accounts():
     PLATFORM_CASH_ACCOUNT, _ = Account.objects.get_or_create(
-        name="platform_cash_account"
+        name="platform_cash_account", type="AS", currencies=["USD"]
     )
     PLATFORM_BAD_DEBT, _ = Account.objects.get_or_create(
-        name="platform_bad_debt"
+        name="platform_bad_debt", type="EX", currencies=["USD"]
     )
     PLATFORM_ACCOUNT_PAYABLES, _ = Account.objects.get_or_create(
-        name="platform_account_payables"
+        name="platform_account_payables", type="LI", currencies=["USD"]
     )
     PLATFORM_ACCOUNT_RECEIVABLES, _ = Account.objects.get_or_create(
-        name="platform_account_receivables"
+        name="platform_account_receivables", type="AS", currencies=["USD"]
     )
 
     return {
