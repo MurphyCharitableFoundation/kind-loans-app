@@ -33,4 +33,5 @@ urlpatterns = [
     path("", include("loan_profile.urls")),
     path("", include("hordak.urls", namespace="hordak")),
     path("payment/", include("payment.urls")),
+    path(r"tagging_autocomplete/", include("tagging_autocomplete.urls")),
 ]

@@ -1,6 +1,4 @@
-"""
-Database models.
-"""
+"""Database models."""
 
 from django.db import models, transaction
 from django.utils import timezone
@@ -14,6 +12,7 @@ from model_utils.models import TimeStampedModel
 from cities_light.models import Country, City
 from djmoney.money import Money
 from djmoney.models.fields import MoneyField
+from tagging_autocomplete.models import TagAutocompleteField
 
 from .operations import (
     lender_to_app,
@@ -133,18 +132,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
     def purchase_credits(self, amount):
-        """
-        REAL-MONEY: Purchase credits from application
-        """
+        """REAL-MONEY: Purchase credits from application."""
+
         self.amount_available += amount
         self.save()
 
         return lender_to_app(self, amount)
 
     def withdraw_credits(self, amount):
-        """
-        REAL-MONEY: Withdraw credits from application
-        """
+        """REAL-MONEY: Withdraw credits from application."""
+
         if amount > self.amount_available:
             ValueError("User may not withdraw more than have available.")
 
@@ -188,9 +185,6 @@ class LoanProfile(models.Model):
     description = models.TextField(
         help_text="The description of the loan profile."
     )
-    business_type = models.CharField(
-        max_length=255, help_text="The type of business for the loan profile."
-    )
     loan_duration_months = models.IntegerField(
         help_text="The duration of the loan in months.", default=12
     )
@@ -224,6 +218,7 @@ class LoanProfile(models.Model):
         default=LoanProfileStatus.PENDING,
         help_text="The status of the loan profile.",
     )
+    categories = TagAutocompleteField()
 
     class Meta:
         verbose_name = "Loan Profile"
@@ -231,7 +226,7 @@ class LoanProfile(models.Model):
         ordering = ["user"]
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}'s {self.title}"
+        return f"{self.title} by {self.user.first_name} {self.user.last_name}"
 
     # TODO: Give this from ops:app_to_borrower
     def total_raised(self):
@@ -324,6 +319,7 @@ class Contribution(TimeStampedModel):
 class Repayment(TimeStampedModel):
     """
     Represents a repayment made by a borrower.
+
     Each borrower can make multiple repayments.
     """
 
@@ -344,9 +340,7 @@ class Repayment(TimeStampedModel):
     )
 
     def repay_lenders(self):
-        """
-        Repay lenders from this amount.
-        """
+        """Repay lenders from this amount."""
 
         def repay_lender(contribution):
             def cut():

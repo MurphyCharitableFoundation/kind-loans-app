@@ -8,3 +8,5 @@ paypalrestsdk
 django-model-utils
 django-hordak
 django-money
+django-tagging
+django-tagging-autocomplete

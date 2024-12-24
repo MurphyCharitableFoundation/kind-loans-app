@@ -1,6 +1,4 @@
-"""
-Tests for models.
-"""
+"""Tests for models."""
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -57,7 +55,7 @@ class ModelTests(TestCase):
             photoURL="www.example.com/photo.jpg",
             title="Test title",
             description="Test description",
-            business_type=1,
+            categories="agribusiness",
             loan_duration_months=12,
             total_amount_required=Money("500.00", "USD"),
             deadline_to_receive_loan="2021-12-31",
@@ -65,7 +63,7 @@ class ModelTests(TestCase):
         )
         self.assertEqual(
             str(loan_profile),
-            f"{user.first_name} {user.last_name}'s {loan_profile.title}",
+            f"{loan_profile.title} by {user.first_name} {user.last_name}",
         )
 
 
@@ -82,7 +80,7 @@ class ContributionModelTests(TestCase):
             user=self.borrower_user,
             photoURL="www.example.com/photo.jpg",
             description="loan profile 1",
-            business_type=1,
+            categories="agribusiness",
             loan_duration_months=12,
             total_amount_required=Money(100, "USD"),
             deadline_to_receive_loan="2021-12-31",
@@ -127,7 +125,7 @@ class RepaymentModelTests(TestCase):
             user=self.borrower_user,
             photoURL="www.example.com/photo.jpg",
             description="loan profile 1",
-            business_type=1,
+            categories="agribusiness",
             loan_duration_months=12,
             total_amount_required=Money(100, "USD"),
             deadline_to_receive_loan="2021-12-31",

@@ -25,7 +25,7 @@ class LoanProfileSerializer(serializers.ModelSerializer):
             "title",
             "status",
             "photoURL",
-            "business_type",
+            "categories",
             "loan_duration_months",
             "total_amount_required",
         )
