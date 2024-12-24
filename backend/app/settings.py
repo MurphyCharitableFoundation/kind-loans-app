@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     "djmoney",
     "corsheaders",
     "django_extensions",
+    "tagging",
+    "tagging_autocomplete",
     # Project
     "core",
     "user",
@@ -179,3 +181,6 @@ PAYPAL_RECEIVER_EMAIL = ""
 
 # Django Money
 SERIALIZATION_MODULES = {"json": "djmoney.serializers"}
+
+# Tagging
+FORCE_LOWERCASE_TAGS = True

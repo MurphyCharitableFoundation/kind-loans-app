@@ -22,7 +22,7 @@ class ContributionAndRepaymentTests(TestCase):
             title="Paid in Full",
             photoURL="www.example.com/photo.jpg",
             description="loan profile 1",
-            business_type=1,
+            categories="agribusiness",
             loan_duration_months=12,
             total_amount_required=Money(100, "USD"),
             deadline_to_receive_loan="2021-12-31",

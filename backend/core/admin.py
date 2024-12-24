@@ -1,9 +1,8 @@
-"""
-Django admin customization.
-"""
+"""Django admin customization."""
 
 from django.contrib import admin, messages
 from django.db.models import Sum
+from django import forms
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
 from django.contrib.admin.options import (
@@ -12,8 +11,12 @@ from django.contrib.admin.options import (
     HttpResponseRedirect,
 )
 
-from core import models
 from djmoney.money import Money
+from tagging_autocomplete.widgets import TagAutocomplete
+from tagging.forms import TagField
+from tagging.models import Tag
+
+from core import models
 
 
 class UserAdmin(BaseUserAdmin):
@@ -86,13 +89,22 @@ class UserAdmin(BaseUserAdmin):
         return Money(total, "USD")
 
 
+class LoanProfileAdminForm(forms.ModelForm):
+    """Loan Profile Admin with Autocompletion for Tagging."""
+
+    categories = TagField(widget=TagAutocomplete())
+
+
 class LoanProfileAdmin(admin.ModelAdmin):
+    # form = LoanProfileAdminForm
     change_form_template = "admin/loan_profile_change_form.html"
+
     list_display = (
         "__str__",
         "total_amount_required",
         "sum_of_contributions",
         "sum_of_repayments",
+        "get_tags",
     )
     readonly_fields = (
         "is_paid_raised_amount",
@@ -100,6 +112,12 @@ class LoanProfileAdmin(admin.ModelAdmin):
         "sum_of_contributions",
         "sum_of_repayments",
     )
+
+    def get_tags(self, obj):
+        tags = Tag.objects.get_for_object(obj)
+        return ", ".join(tag.name for tag in tags)
+
+    get_tags.short_description = "Tags"
 
     actions = ["get_payment", "make_payment", "apply_repayments"]
 
