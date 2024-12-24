@@ -1,7 +1,6 @@
 """Database models."""
 
 from django.db import models, transaction
-from django.utils import timezone
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -20,6 +19,7 @@ from .operations import (
     app_to_borrower,
     borrower_to_app,
 )
+from .utils import one_year_from_now
 
 
 class UserManager(BaseUserManager):
@@ -203,7 +203,7 @@ class LoanProfile(models.Model):
     )
     deadline_to_receive_loan = models.DateField(
         help_text="The deadline to receive the loan.",
-        default=timezone.now() + timezone.timedelta(days=365),
+        default=one_year_from_now,
     )
     created_at = models.DateTimeField(
         auto_now_add=True,
