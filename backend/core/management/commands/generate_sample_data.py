@@ -38,7 +38,8 @@ class Command(BaseCommand):
                 first, last = list(map(str.lower, name.split()))[:2]
 
                 lender = get_user_model().objects.create_user(
-                    name=name,
+                    first_name=first,
+                    last_name=last,
                     email=f"{first}.{last}@example.com",
                     password=fake.name(),
                     role=models.UserRole.LENDER,
@@ -52,7 +53,8 @@ class Command(BaseCommand):
                 first, last = list(map(str.lower, name.split()))[:2]
 
                 user = get_user_model().objects.create_user(
-                    name=name,
+                    first_name=first,
+                    last_name=last,
                     email=f"{first}.{last}@example.com",
                     password=fake.name(),
                 )
@@ -61,7 +63,7 @@ class Command(BaseCommand):
                     photoURL=fake.image_url(width=640, height=480),
                     title=fake.company(),
                     description=fake.paragraph(nb_sentences=4),
-                    business_type="",
+                    categories="agribusiness",
                     loan_duration_months=fake.random_number(digits=2),
                     total_amount_required=Money(50, "USD"),
                     deadline_to_receive_loan=fake.date_between(
