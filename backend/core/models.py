@@ -61,8 +61,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
         max_length=255, unique=True, help_text="The email address of the user."
     )
-    name = models.CharField(
-        max_length=255, help_text="The full name of the user."
+    first_name = models.CharField(
+        max_length=255, help_text="The first name of the user."
+    )
+    last_name = models.CharField(
+        max_length=255, help_text="The last name of the user."
     )
     is_active = models.BooleanField(
         default=True,
@@ -228,7 +231,7 @@ class LoanProfile(models.Model):
         ordering = ["user"]
 
     def __str__(self):
-        return f"{self.user.name}'s {self.title}"
+        return f"{self.user.first_name} {self.user.last_name}'s {self.title}"
 
     # TODO: Give this from ops:app_to_borrower
     def total_raised(self):
