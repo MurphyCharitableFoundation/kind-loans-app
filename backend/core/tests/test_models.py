@@ -64,7 +64,8 @@ class ModelTests(TestCase):
             status=1,
         )
         self.assertEqual(
-            str(loan_profile), f"{user.name}'s {loan_profile.title}"
+            str(loan_profile),
+            f"{user.first_name} {user.last_name}'s {loan_profile.title}",
         )
 
 

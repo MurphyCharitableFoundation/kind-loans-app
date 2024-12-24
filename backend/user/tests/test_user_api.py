@@ -34,7 +34,8 @@ class PublicUserApiTests(TestCase):
         payload = {
             "email": "test@example.com",
             "password": "testpass123",
-            "name": "Test Name",
+            "first_name": "John",
+            "last_name": "Smith",
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -48,7 +49,8 @@ class PublicUserApiTests(TestCase):
         payload = {
             "email": "test@example.com",
             "password": "testpass123",
-            "name": "Test Name",
+            "first_name": "John",
+            "last_name": "Smith",
         }
         create_user(**payload)
 
@@ -61,7 +63,8 @@ class PublicUserApiTests(TestCase):
         payload = {
             "email": "test@example.com",
             "password": "pw",
-            "name": "Test Name",
+            "first_name": "John",
+            "last_name": "Smith",
         }
         res = self.client.post(CREATE_USER_URL, payload)
 
@@ -74,7 +77,8 @@ class PublicUserApiTests(TestCase):
     def test_create_token_for_user(self):
         """Test that a token is created for the user."""
         user_details = {
-            "name": "Test Name",
+            "first_name": "John",
+            "last_name": "Smith",
             "email": "test@example.com",
             "password": "test-user-password123",
         }
@@ -121,7 +125,8 @@ class PrivateUserApiTests(TestCase):
         self.user = create_user(
             email="test@example.com",
             password="testpass123",
-            name="Test Name",
+            first_name="John",
+            last_name="Smith",
         )
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
@@ -134,7 +139,8 @@ class PrivateUserApiTests(TestCase):
         self.assertEqual(
             res.data,
             {
-                "name": self.user.name,
+                "first_name": self.user.first_name,
+                "last_name": self.user.last_name,
                 "email": self.user.email,
                 "role": self.user.role,
                 "country": self.user.country,
@@ -155,12 +161,17 @@ class PrivateUserApiTests(TestCase):
 
     def test_update_user_profile(self):
         """Test updating the user profile for authenticated user."""
-        payload = {"name": "Updated Name", "password": "newpassword123"}
+        payload = {
+            "first_name": "Jane",
+            "last_name": "Doe",
+            "password": "newpassword123",
+        }
 
         res = self.client.patch(ME_URL, payload)
         self.user.refresh_from_db()
 
-        self.assertEqual(self.user.name, payload["name"])
+        self.assertEqual(self.user.first_name, payload["first_name"])
+        self.assertEqual(self.user.last_name, payload["last_name"])
         self.assertTrue(self.user.check_password(payload["password"]))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -170,7 +181,8 @@ class PrivateUserApiTests(TestCase):
         another_country = Country.objects.create(name="Another Country")
         city = City.objects.create(name="City", country=country)
         payload = {
-            "name": "Test Name",
+            "first_name": "John",
+            "last_name": "Smith",
             "email": "test2@example.com",
             "password": "testpass123",
             "city": city.id,
