@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
+import { ThemeProvider, CssBaseline } from "@mui/material";
 import LoanRequests from "./pages/LoanRequests/LoanRequests";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import LoanSearchPage from "./pages/LandingPage/LoanSearchPage";
@@ -17,10 +17,10 @@ import "@fontsource/roboto/700.css";
 import AppWrapper from "./components/AppWrapper";
 import SignIn from "./pages/SignIn/SignIn";
 import SignUp from "./pages/SignUp/SignUp";
-import AppTheme from "./theme/ThemeProvider";
 import { Toaster } from "react-hot-toast";
 import { store } from "./store";
 import { Provider } from "react-redux";
+import { createTheme } from "@mui/material/styles";
 
 const queryClient = new QueryClient();
 
@@ -81,16 +81,22 @@ const router = createBrowserRouter([
   },
 ]);
 
+const theme = createTheme({
+  typography: {
+    fontFamily: `"SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+  },
+});
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AppTheme>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         <Toaster position="bottom-center" />
         <Provider store={store}>
           <RouterProvider router={router} />
         </Provider>
-      </AppTheme>
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>
 );
