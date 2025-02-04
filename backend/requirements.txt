@@ -4,3 +4,9 @@ psycopg2>=2.8.6,<2.9
 drf-spectacular>=0.15.1,<0.16
 django-cities-light>=3.10.0,<3.11
 django-cors-headers>=3.7.0,<3.8
+paypalrestsdk
+django-model-utils
+django-hordak
+django-money
+django-tagging
+django-tagging-autocomplete

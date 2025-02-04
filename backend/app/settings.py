@@ -28,8 +28,6 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -40,14 +38,24 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "core",
+    # 3rd party
     "rest_framework",
     "rest_framework.authtoken",
     "drf_spectacular",
+    "mptt",
+    "hordak",
+    "djmoney",
+    "corsheaders",
+    "django_extensions",
+    "tagging",
+    "tagging_autocomplete",
+    # Project
+    "core",
     "user",
     "cities_light",
     "loan_profile",
-    "corsheaders",
+    "transaction",
+    "payment",
 ]
 
 MIDDLEWARE = [
@@ -134,6 +142,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATICFILES_DIRS = [
+#    BASE_DIR / "static",
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -155,3 +167,20 @@ CORS_ALLOWED_ORIGINS = [
 ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1"]
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+# MCF
+MCF_APP_NAME = "Murphy Charitable Foundation - Kind Loans App"
+
+# Paypal
+PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID")
+PAYPAL_SECRET_KEY = os.environ.get("PAYPAL_SECRET_KEY")
+PAYPAL_BASE_URL = os.environ.get("PAYPAL_BASE_URL")
+PAYPAL_MODE = os.environ.get("PAYPAL_MODE")
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = ""
+
+# Django Money
+SERIALIZATION_MODULES = {"json": "djmoney.serializers"}
+
+# Tagging
+FORCE_LOWERCASE_TAGS = True

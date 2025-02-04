@@ -2,12 +2,13 @@
 
 ## Setup
 
-- 1. Install Docker
-- 2. Run `docker compose build` to build the docker images
-- 3. Run `docker compose run --rm backend sh -c "python manage.py createsuperuser"` to create a superuser
-- 4. Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6` to generate sample data
-- 5. Run `docker compose up` to start the containers
-- 6. Run `docker compose down` to stop the containers
+1. Install Docker
+1. Run `docker compose build` to build the docker images
+1. Run `docker compose up` to start the containers
+1. Run `docker compose run --rm backend sh -c "python manage.py createsuperuser"` to create a superuser
+1. Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6` to generate sample data
+1. Run `docker compose run --rm backend sh -c "python manage.py create_tags` to create tags for loan profiles
+1. Run `docker compose down` to stop the containers
 
 ## Backend
 
@@ -32,10 +33,11 @@
 
 - frontend: how do we leverage figma to (easily) create the frontend?
 
-- backend: what happens if the loan deadline is reached?
-- backend: implications of removing a loan profile?
+- backend: 
+  - what happens if the loan deadline is reached?
+  - is loan duration related to loan-deadline?
+  - implications of removing a loan profile?
     - before approval
     - after approval
     - while gathering funds
     - after funds are gathered
-- backend: is loan duration related to loan-deadline?
