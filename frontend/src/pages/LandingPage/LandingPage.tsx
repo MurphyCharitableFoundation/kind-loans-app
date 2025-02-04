@@ -57,13 +57,13 @@ function LandingIntro() {
             color: "white",
         }}>
             <Box margin={4}>
-                <Typography variant='h4' gutterBottom={true}>
-                    Lend as little as $25 to help make a dream come true
+                <Typography gutterBottom={true} lineHeight={"28px"} fontSize={"30px"} fontWeight={500}>
+                    <strong>Lend as little as $25 to help make a dream come true</strong>
                 </Typography>
-                <Typography variant='h6' gutterBottom={true}>
+                <Typography gutterBottom={true} lineHeight={"24px"} fontSize={"16px"} fontWeight={500}>
                     100% of your loan goes to supporting entrepreneurs in need.
                 </Typography>
-                <Box textAlign='center'>
+                <Box textAlign='center' marginTop={2}>
                     <Button variant='contained' sx={{
                         background: "#034792",
                         borderRadius: 4,
@@ -83,18 +83,18 @@ function LandingIntro() {
 function LandingVision() {
     return (
         <Box mt='1rem' mb='1rem' margin={4}>
-            <Box textAlign='center'>
-                <Typography variant='h4'>
-                    Our <Typography variant='h4' component={"span"} sx={{color: "#4F9816"}}>Vision</Typography>
+            <Box>
+                <Typography lineHeight={"28px"} fontSize={"22px"} fontWeight={500}>
+                    Our <Typography lineHeight={"28px"} fontSize={"22px"} fontWeight={500} component={"span"} sx={{color: "#4F9816"}}>Vision</Typography>
                 </Typography>
             </Box>
             <Box mt='1rem' mb='1rem'>
-                <Typography variant='body1'>
+                <Typography lineHeight={"21px"} fontSize={"14px"} fontWeight={400}>
                     The Kind Loans App was created by the <Typography component="span" variant='body1' ss={{textDecoration: "underline"}}>Murphy Charitable Foundation (MCF)</Typography> to meet the needs of poor women entrepreneurs in Uganda who lack access to traditional banks.
                 </Typography>
             </Box>
             <Box mt='1rem' mb='1rem'>
-                <Typography variant='body1'>
+                <Typography lineHeight={"21px"} fontSize={"14px"} fontWeight={400}>
                     This app enables lenders to easily fund <strong>interest-free</strong> micro-loans for women entrepreneurs in Uganda, enabling them to start and grow their small businesses, pursue education, and improve the quality of life for their families.
                 </Typography>
             </Box>
@@ -108,15 +108,17 @@ function LandingVision() {
 function LandingStories() {
     return (
         <Box mt='1rem' mb='1rem'>
-            <Box textAlign='center' mt='1rem' mb='1rem'>
-                <Typography variant='h3'>
-                    Borrower Stories
+            <Box margin={4}>
+            <Box mt='1rem' mb='1rem'>
+                <Typography variant='h4'>
+                    Impact <Typography variant='h4' component={"span"} sx={{color: "#4F9816"}}>Stories</Typography>
                 </Typography>
             </Box>
-            <Box textAlign='center' mt='1rem' mb='1rem'>
-                <Typography varient='subtitle2'>
-                    Hear from our borrowers
+            <Box mt='1rem' mb='1rem'>
+                <Typography variant='subtitle2'>
+                    Hear from the entrepreneurs that Kind Loans supports.
                 </Typography>
+            </Box>
             </Box>
             <Box mt='1rem' mb='1rem'>
                 {/* just leave a singe card here for now */}

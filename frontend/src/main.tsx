@@ -83,7 +83,7 @@ const router = createBrowserRouter([
 
 const theme = createTheme({
   typography: {
-    fontFamily: `"SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+    fontFamily: `"Inter", "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
   },
 });
 

@@ -35,8 +35,10 @@ function LandPageCarousel(){
                 border: "transparent"
             }
         }}
+
         animation={"slide"}
         duration={800}
+        autoPlay={false}
         >
             {
                 LoanPofileTest.map( (item, i) => <BorrowerCard key={i} LoanPofile={item} /> )

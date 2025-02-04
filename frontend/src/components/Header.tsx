@@ -41,7 +41,10 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
 
   return (
     <AppBar position="sticky" elevation={4}>
-      <Container maxWidth="lg" sx={{ p: 0 }}>
+      <Container maxWidth="lg" sx={{
+          p: 0,
+          background: "#2E3036"
+      }}>
         <Toolbar disableGutters sx={{ px: 2 }}>
           <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
@@ -60,7 +63,6 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
           >
             kind loans
           </Typography>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -70,14 +72,13 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
+              fontWeight: 400,
+              // letterSpacing: ".3rem",
               color: "inherit",
               textDecoration: "none",
             }}
           >
-            kind loans
+            Kind Loans
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {token && (
@@ -118,9 +119,9 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
             </Box>
           )}
           {!token && (
-            <Link to="/signin">
-              <Button sx={{ ml: 2 }} variant="contained">
-                Sign in
+              <Link to="/signin">
+              <Button variant='outlined' sx={{ ml: 2, borderRadius: 4, color:"#F0F0F7", borderColor: "#F0F0F7", boxShadow: "none", backgroundColor: "inherit", fontSize:10, font: "Work Sans"}}>
+                Log In
               </Button>
             </Link>
           )}

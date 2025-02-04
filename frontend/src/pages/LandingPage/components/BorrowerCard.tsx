@@ -9,12 +9,12 @@ import Button from '@mui/material/Button';
 
 function BorrowerCard({LoanPofile:{imgPath,loanDescription,localtionDescription}}) {
     return (
-        <Card>
+        <Card sx={{marginLeft: 8, marginRight: 8, boxShadow: "none"}}>
             <CardMedia
                 component="img"
                 image={imgPath}
                 alt="Borrower Img"
-                sx={{ objectFit: "contain" }}
+                sx={{ objectFit: "contain", borderRadius: 4, }}
             />
             <CardContent sx={{ px: 2, pt: 2 }}>
                 <Typography variant="body2">
