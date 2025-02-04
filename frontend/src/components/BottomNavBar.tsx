@@ -3,8 +3,6 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import SearchIcon from '@mui/icons-material/Search';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-//import CreditScoreIcon from "@mui/icons-material/CreditScore";
-//import ListAltIcon from "@mui/icons-material/ListAlt";
 import { Link, useLocation } from "react-router-dom";
 
 

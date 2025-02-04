@@ -120,7 +120,7 @@ function Header({ sectionTitle }: { sectionTitle: string }) {
           )}
           {!token && (
               <Link to="/signin">
-              <Button variant='outlined' sx={{ ml: 2, borderRadius: 4, color:"#F0F0F7", borderColor: "#F0F0F7", boxShadow: "none", backgroundColor: "inherit", fontSize:10, font: "Work Sans"}}>
+              <Button variant='outlined' size={"small"} sx={{ ml: 2, borderRadius: 4, color:"#F0F0F7", borderColor: "#F0F0F7"}}>
                 Log In
               </Button>
             </Link>
