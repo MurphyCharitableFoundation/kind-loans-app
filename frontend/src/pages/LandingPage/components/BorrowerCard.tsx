@@ -9,18 +9,20 @@ import Button from '@mui/material/Button';
 
 function BorrowerCard({LoanPofile:{imgPath,loanDescription,localtionDescription}}) {
     return (
-        <Card sx={{marginLeft: 8, marginRight: 8, boxShadow: "none"}}>
-            <CardMedia
-                component="img"
-                image={imgPath}
-                alt="Borrower Img"
-                sx={{ objectFit: "contain", borderRadius: 4, }}
-            />
-            <CardContent sx={{ px: 2, pt: 2 }}>
-                <Typography variant="body2">
+        <Card>
+            <Box height={239}>
+                <CardMedia
+                    component="img"
+                    image={imgPath}
+                    alt="Borrower Img"
+                    sx={{ objectFit: "contain", borderRadius: 4}}
+                />
+            </Box>
+            <CardContent sx={{padding: 0}}>
+                <Typography variant={"body2"}>
                     {loanDescription}
                 </Typography>
-                <Typography variant="caption">
+                <Typography variant={"caption"} paddingTop={2}>
                     {localtionDescription}
                 </Typography>
             </CardContent>
@@ -30,7 +32,7 @@ function BorrowerCard({LoanPofile:{imgPath,loanDescription,localtionDescription}
 
 function BorrowerCardWithProgress({LoanPofile:{imgPath,loanTitle,location,timeLine,progressbarPercent,fundingProgress}}) {
     return (
-        <Card>
+        <Card variant={"outlined"} sx={{borderRadius: 3}}>
             <CardMedia
                 component="img"
                 image={imgPath}
@@ -38,17 +40,15 @@ function BorrowerCardWithProgress({LoanPofile:{imgPath,loanTitle,location,timeLi
                 sx={{ objectFit: "contain" }}
             />
             <CardContent sx={{ px: 2, pt: 2 }}>
-                <Typography variant="body2">
-                    {loanTitle}
+                <Typography variant="body1">
+                    <strong>{loanTitle}</strong>
                 </Typography>
-                <Box mb="1rem" mt="1rem" display='flex' justifyContent='space-between' alignItems="center">
-                    <Typography variant="caption" sx={{ flexGrow: 1 }}>
-                        {location}
-                    </Typography>
-                    <Typography variant="caption">
-                        {timeLine} left
-                    </Typography>
-                </Box>
+                <Typography variant="body2" marginTop={1}>
+                    {location}
+                </Typography>
+                <Typography variant="body2" marginTop={2} marginBottom={1}>
+                    {timeLine} left
+                </Typography>
                 <LinearProgress variant="determinate" value={progressbarPercent} />
                 <Box display="flex" justifyContent="space-between">
                     <Typography variant="caption" align="right" width="100%">
@@ -56,7 +56,7 @@ function BorrowerCardWithProgress({LoanPofile:{imgPath,loanTitle,location,timeLi
                     </Typography>
                 </Box>
                 <Box>
-                    <Button variant='contained' >
+                    <Button variant='contained' size={"small"} sx={{borderRadius: 4, backgroundColor: "#034792", boxShadow: "none"}}>
                         View Loan
                     </Button>
                 </Box>

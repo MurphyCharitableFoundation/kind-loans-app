@@ -3,12 +3,11 @@ import {Box, Button} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import SearchDialog from './components/SearchDialog';
 import Divider from '@mui/material/Divider';
-import Avatar from '@mui/material/Avatar';
 import { BorrowerCardWithProgress } from './components/BorrowerCard';
-import ToggleButtonGroupForBusinesses from './components/ToggleButtonForBusinesses';
 import LandPageCarousel from './components/LandingPageCarousel';
 import SortFilterPopover from './components/SortFilterPopper';
 import  intro from "../../assets/intro.png";
+import {useRef} from "react";
 
 // should import from data, dont know how to do that currently :(
 // testing area-----------------------------------
@@ -24,32 +23,29 @@ const LoanPofileTest = {
 //testing area ends-----------------------------------
 
 function Landingpage(){
+    const targetRef = useRef<HTMLDivElement>(null);
 
+    const handleScroll = () => {
+        if (targetRef.current) {
+            targetRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    };
     // testing area ends-----------------
 
     return (
         <Box>
-            <LandingIntro />
+            <LandingIntro onAction={handleScroll} />
             <Divider />
             <LandingVision />
             <Divider />
             <LandingStories />
             <Divider />
-            <LandingLoanList />
+            <LandingLoanList targetRef={targetRef} />
         </Box>
     )
 }
 
-function LandingIntro() {
-    const [open, setOpen] = React.useState(false);
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+function LandingIntro({onAction}) {
     return (
         <Box mb='0.5rem' margin={0} alignItems={'end'} display={"flex"} sx={{
             backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${intro})`,
@@ -57,24 +53,20 @@ function LandingIntro() {
             color: "white",
         }}>
             <Box margin={4}>
-                <Typography gutterBottom={true} lineHeight={"28px"} fontSize={"30px"} fontWeight={500}>
+                <Typography gutterBottom={true} variant={"h2"}>
                     <strong>Lend as little as $25 to help make a dream come true</strong>
                 </Typography>
-                <Typography gutterBottom={true} lineHeight={"24px"} fontSize={"16px"} fontWeight={500}>
+                <Typography gutterBottom={true} variant={"h4"}>
                     100% of your loan goes to supporting entrepreneurs in need.
                 </Typography>
                 <Box textAlign='center' marginTop={2}>
                     <Button variant='contained' sx={{
                         background: "#034792",
                         borderRadius: 4,
-                    }} fullWidth={true} onClick={handleClickOpen}>
+                    }} fullWidth={true} onClick={onAction}>
                         Browse loans
                     </Button>
                 </Box>
-                <SearchDialog
-                    open={open}
-                    handleClose={handleClose}
-                />
             </Box>
         </Box>
     );
@@ -84,22 +76,19 @@ function LandingVision() {
     return (
         <Box mt='1rem' mb='1rem' margin={4}>
             <Box>
-                <Typography lineHeight={"28px"} fontSize={"22px"} fontWeight={500}>
-                    Our <Typography lineHeight={"28px"} fontSize={"22px"} fontWeight={500} component={"span"} sx={{color: "#4F9816"}}>Vision</Typography>
+                <Typography variant={"h3"}>
+                    Our <Typography variant={"h3"} component={"span"} sx={{color: "#4F9816"}}>Vision</Typography>
                 </Typography>
             </Box>
             <Box mt='1rem' mb='1rem'>
-                <Typography lineHeight={"21px"} fontSize={"14px"} fontWeight={400}>
-                    The Kind Loans App was created by the <Typography component="span" variant='body1' ss={{textDecoration: "underline"}}>Murphy Charitable Foundation (MCF)</Typography> to meet the needs of poor women entrepreneurs in Uganda who lack access to traditional banks.
+                <Typography variant={"body2"}>
+                    The Kind Loans App was created by the <Typography component="span" variant='body1'>Murphy Charitable Foundation (MCF)</Typography> to meet the needs of poor women entrepreneurs in Uganda who lack access to traditional banks.
                 </Typography>
             </Box>
             <Box mt='1rem' mb='1rem'>
-                <Typography lineHeight={"21px"} fontSize={"14px"} fontWeight={400}>
+                <Typography variant={"body2"}>
                     This app enables lenders to easily fund <strong>interest-free</strong> micro-loans for women entrepreneurs in Uganda, enabling them to start and grow their small businesses, pursue education, and improve the quality of life for their families.
                 </Typography>
-            </Box>
-            <Box style={{ justifyContent: "center", display: "flex"}} mt='0.5rem' mb='0.5rem'>
-                <Avatar sx={{ width: 50, height: 50 }} alt='Murphy Icon' src='https://s3-alpha-sig.figma.com/img/df53/4857/8174afe277f743864f6e1f065f8a561e?Expires=1731283200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=Fh~QeGqL9OnCbaj-ecaCWoLIAIOCZLooDABJiYoyN3tqZEiptmY3-LPSc8hil1LENMsYZ3WqwV6JywS8JFP4nRV3KqCBrvkW~~jS5kThxWRAce4sQlqPBhNq~xCe5jQGE3JdfCOzJiQOyM9eoMIZ1174X32DB4WFJ4wJDpq2jtSl5l7FwxgG~X178KFaNR0QgxKLXWghOd7aGxQistO7LkQdKWnIUU9VoLnlDUSbCCI4zMwdm8pxyPqto3p3gWef2Ca~ADPOrYrGRqjOr-Jgd1kpxT8alScOu7vtFAz1taQ0UlR4Qcl2qdVy-XEQKFPmX3GkmueFrGj1IIWJUsFXRw__' />
             </Box>
         </Box>
     );
@@ -109,16 +98,16 @@ function LandingStories() {
     return (
         <Box mt='1rem' mb='1rem'>
             <Box margin={4}>
-            <Box mt='1rem' mb='1rem'>
-                <Typography variant='h4'>
-                    Impact <Typography variant='h4' component={"span"} sx={{color: "#4F9816"}}>Stories</Typography>
-                </Typography>
-            </Box>
-            <Box mt='1rem' mb='1rem'>
-                <Typography variant='subtitle2'>
-                    Hear from the entrepreneurs that Kind Loans supports.
-                </Typography>
-            </Box>
+                <Box mt='1rem' mb='1rem'>
+                    <Typography variant={"h3"}>
+                        Impact <Typography variant={"h3"} component={"span"} sx={{color: "#4F9816"}}>Stories</Typography>
+                    </Typography>
+                </Box>
+                <Box mt='1rem' mb='1rem'>
+                    <Typography variant='subtitle2'>
+                        Hear from the entrepreneurs that Kind Loans supports.
+                    </Typography>
+                </Box>
             </Box>
             <Box mt='1rem' mb='1rem'>
                 {/* just leave a singe card here for now */}
@@ -129,51 +118,44 @@ function LandingStories() {
     );
 }
 
-function LandingLoanList() {
-    const [business, setBusiness] = React.useState(() => []);
+function LandingLoanList({targetRef}) {
+    const [open, setOpen] = React.useState(false);
 
-    const handleBusiness = (event, newBusiness) => {
-        setBusiness(newBusiness);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
     };
 
-    // testing area starts---------------
-    const numLoans = 1
-
     return (
-        <Box mt='1rem' mb='1rem'>
-            <Box textAlign='center' mt='1rem' mb='1rem'>
-                <Typography variant='h3'>
-                    Almost there!
-                </Typography>
-            </Box>
-            <Box textAlign='center' mt='1rem' mb='1rem'>
-                <Typography variant='subtitle1'>
-                    Lend the last few dollars they need
-                </Typography>
-            </Box>
-            <Box mt='1rem' mb='1rem' textAlign="center">
-                <Typography variant='caption'>
-                    I want to support someone with a loan for
-                </Typography>
-            </Box>
+        <Box ref={targetRef} margin={4} mt='1rem' mb='1rem'>
             <Box mt='1rem' mb='1rem'>
-                <ToggleButtonGroupForBusinesses
-                    FilterButtonBusinesses={[{id:1,text:"Any business type"} , {id:2,text:"Medical"} , {id:3,text:"Colthing"} ,{id:4,text:"Grocery"}, {id:5,text:"Emergency"},{id:6,text:"Education"},{id:7,text:"Others"}]}
-                    business={business}
-                    handleBusiness={handleBusiness}
-                />
+                <Typography variant='h3'>
+                    <Typography variant='h3' component={"span"} sx={{color: "#4F9816"}}>Find</Typography> a Loan to Support
+                </Typography>
             </Box>
+            <SearchDialog
+                open={open}
+                handleClose={handleClose}
+            />
             <Box mb='0.5rem' display='flex' justifyContent='space-between' alignItems="center">
-                <Box textAlign="center" sx={{ flexGrow: 1}}>
-                    <Typography variant='subtitle1'>
-                        Total {numLoans} borrowers
-                    </Typography>
+                <Box marginTop={2} width={188}>
+                    <Button variant='outlined' size='small' sx={{
+                        border: "1px solid #74777F",
+                        borderRadius: 4,
+                        color: "#034792",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                    }} onClick={handleClickOpen}>
+                        Filter by Category
+                    </Button>
                 </Box>
                 <SortFilterPopover />
             </Box>
             {/* single card and a filter */}
             {/* filter working on progress */}
-            <Box>
+            <Box marginTop={2}>
                 <BorrowerCardWithProgress LoanPofile={LoanPofileTest}/>
             </Box>
             <Box textAlign="center" mt="2rem" mb="7rem">

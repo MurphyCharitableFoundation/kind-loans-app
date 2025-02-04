@@ -46,11 +46,11 @@ const LoanPofileTest={
 const router = createBrowserRouter([
   //should add a landing page here
   {
-    path: "/",
+    path: "/loans",
     element: <AppWrapper children={<LoanRequests />} title="Loan requests" />,
   },
   {
-    path: "/landing",
+    path: "/",
     element: <AppWrapper children={<LandingPage />} title="" />,
   },
   {
@@ -82,8 +82,44 @@ const router = createBrowserRouter([
 ]);
 
 const theme = createTheme({
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          fontSize: "14px", // Change font size for all buttons
+          fontFamily: `"Inter", sans-serif`, // Change font family
+          textTransform: "none", // Prevents uppercase transformation
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: `"Inter", "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`,
+    h2: {
+      fontSize: "30px",
+      lineHeight: "28px",
+      fontWeight: 500,
+    },
+    h3: {
+      fontSize: "22px",
+      lineHeight: "28px",
+      fontWeight: 500,
+    },
+    h4: {
+      fontSize: "16px",
+      lineHeight: "24px",
+      fontWeight: 500,
+    },
+    body2: {
+      fontSize: "14px",
+      lineHeight: "21px",
+      fontWeight: 400,
+    },
+    caption: {
+      fontSize: "14px",
+      lineHeight: "21px",
+      fontWeight: 500,
+    }
   },
 });
 
