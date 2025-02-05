@@ -1,3 +1,6 @@
-flake8>=3.9.2,<3.10
+flake8
 django_extensions
 faker
+black
+pre-commit
+ruff

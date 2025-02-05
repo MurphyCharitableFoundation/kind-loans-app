@@ -1,8 +1,9 @@
-"""Core Utils."""
+"""Core utilities."""
 
-from django.utils import timezone
+from django.contrib.auth.models import Group
 
 
-def one_year_from_now():
-    """Return a date one year from now."""
-    return timezone.now() + timezone.timedelta(days=365)
+def assign_user_group(user, group_name):
+    """Assign user to a role-based group."""
+    group = Group.objects.get(name=group_name)
+    user.groups.add(group)

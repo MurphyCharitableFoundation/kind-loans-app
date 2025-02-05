@@ -2,12 +2,8 @@
 Serializers for the user API view.
 """
 
-from django.contrib.auth import (
-    get_user_model,
-    authenticate,
-)
+from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import gettext_lazy as _
-
 from rest_framework import serializers
 
 
@@ -21,25 +17,9 @@ class UserSerializer(serializers.ModelSerializer):
             "password",
             "first_name",
             "last_name",
-            "role",
-            "country",
-            "city",
-            "business_name",
-            "business_type",
-            "interests",
-            "photoURL",
-            "story",
+            "profile_img",
         )
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
-
-    def validate(self, data):
-        """Check if city belongs to country."""
-        if data.get("city") and data.get("country"):
-            if data["city"].country != data["country"]:
-                raise serializers.ValidationError(
-                    _("City must belong to the selected country.")
-                )
-        return data
 
     def create(self, validated_data):
         """Create a new user with an encrypted password and return it."""

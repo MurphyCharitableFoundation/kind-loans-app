@@ -1,5 +1,4 @@
-FROM python:3.9-alpine3.13
-LABEL maintainer="dylan-jacob-black.com"
+FROM python:3.12.8-alpine3.20
 
 ENV PYTHONUNBUFFERED 1
 

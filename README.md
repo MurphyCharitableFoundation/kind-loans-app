@@ -19,6 +19,20 @@
 - localhost:8000/admin - Django admin
 - localhost:8000/docs - Django Rest Framework documentation
 
+### Notes on separation of models into apps
+
+WARNING: This was a breaking change.
+
+To fix:
+1. Reset your database by removing docker volumes
+   `docker compose down -v`
+   `docker compose up --build -d`
+
+1. Run django migrations again
+   `docker compose run --rm backend sh -c "python manage.py migrate"`
+
+These commands should resolve this issue.
+
 ## Frontend
 
 - React
@@ -33,7 +47,7 @@
 
 - frontend: how do we leverage figma to (easily) create the frontend?
 
-- backend: 
+- backend:
   - what happens if the loan deadline is reached?
   - is loan duration related to loan-deadline?
   - implications of removing a loan profile?

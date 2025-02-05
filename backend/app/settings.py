@@ -13,6 +13,13 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 
+import django
+from django.utils.encoding import smart_str
+
+django.utils.encoding.smart_text = smart_str
+
+BASE_FRONTEND_URL = "http://localhost"
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,23 +45,27 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # 3rd party
+    # 3rd party apps:
+    "phonenumber_field",
     "rest_framework",
     "rest_framework.authtoken",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
     "drf_spectacular",
     "mptt",
     "hordak",
     "djmoney",
     "corsheaders",
     "django_extensions",
-    "tagging",
-    "tagging_autocomplete",
-    # Project
+    # Project apps:
     "core",
+    "authentication",
     "user",
-    "cities_light",
-    "loan_profile",
-    "transaction",
+    "loan",
     "payment",
 ]
 
@@ -67,6 +78,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # Third Party Middleware:
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 
@@ -152,7 +165,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "core.User"
+AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -171,6 +184,48 @@ CORS_ALLOW_ALL_ORIGINS = True
 # MCF
 MCF_APP_NAME = "Murphy Charitable Foundation - Kind Loans App"
 
+# ALLAUTH
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# ALLAUTH - verify through email
+ACCOUNT_EMAIL_VERIFICATION = True  # Always verify through email
+# <EMAIL_CONFIRM_REDIRECT_BASE_URL>/<key>
+EMAIL_CONFIRM_REDIRECT_BASE_URL = f"{BASE_FRONTEND_URL}/email/confirm/"
+# <PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL>/<uidb64>/<token>/
+PASSWORD_RESET_CONFIRM_REDIRECT_BASE_URL = (
+    f"{BASE_FRONTEND_URL}/password-reset/confirm/"
+)
+
+# SITE
+SITE_ID = 1
+
+# EMAIL
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "kindgivingapp.team@mcf.com"
+
+# SOCIAL AUTHENTICATION
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.environ.get("GOOGLE_AUTH_CLIENT_ID"),
+            "secret": os.environ.get("GOOGLE_AUTH_SECRET"),
+            "key": "",  # leave empty
+        },
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+    },
+}
+
 # Paypal
 PAYPAL_CLIENT_ID = os.environ.get("PAYPAL_CLIENT_ID")
 PAYPAL_SECRET_KEY = os.environ.get("PAYPAL_SECRET_KEY")
@@ -181,6 +236,3 @@ PAYPAL_RECEIVER_EMAIL = ""
 
 # Django Money
 SERIALIZATION_MODULES = {"json": "djmoney.serializers"}
-
-# Tagging
-FORCE_LOWERCASE_TAGS = True
