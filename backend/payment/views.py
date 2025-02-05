@@ -1,20 +1,19 @@
-"""
-Views for Payment
-"""
+"""Payment Views."""
 
-from djmoney.money import Money
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from django.urls import reverse
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-
-from core.models import User
-from transaction.services import (
+from django.urls import reverse
+from djmoney.money import Money
+from loan.helpers import make_payment, make_payout
+from payment.services import (
     create_paypal_transaction,
-    execute_paypal_transaction,
     execute_paypal_payout_transaction,
+    execute_paypal_transaction,
 )
-from core.helpers import make_payment, make_payout
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+User = get_user_model()
 
 
 class CreatePayPalPaymentView(APIView):

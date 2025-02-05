@@ -1,9 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-
-from hordak.models import Transaction, StatementImport, Leg
-from core.models import Contribution, Repayment, User
-
 from djmoney.money import Money
+from hordak.models import Leg, StatementImport, Transaction
+from loan.models import Contribution, Repayment
+
+User = get_user_model()
 
 
 class Command(BaseCommand):

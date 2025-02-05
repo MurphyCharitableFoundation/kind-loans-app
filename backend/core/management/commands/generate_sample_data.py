@@ -1,12 +1,14 @@
-from django.core.management.base import BaseCommand
+from datetime import timedelta
+
+from core.utils import assign_user_group
 from django.contrib.auth import get_user_model
-
-from core import models
-from core import helpers
-
+from django.contrib.auth.models import Group
+from django.core.management.base import BaseCommand
 from djmoney.money import Money
 from faker import Faker
-from datetime import timedelta
+from loan import helpers, models
+
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -32,18 +34,25 @@ class Command(BaseCommand):
         def get_amount(n=3):
             return fake.pydecimal(left_digits=3, right_digits=2, positive=True)
 
+        def get_all_lenders():
+            return Group.objects.get(name="lender").user_set.all()
+
+        def get_all_borrowers():
+            return Group.objects.get(name="borrower").user_set.all()
+
         def create_n_lenders(n):
             for _ in range(LENDER_COUNT):
                 name = fake.name()
                 first, last = list(map(str.lower, name.split()))[:2]
 
-                lender = get_user_model().objects.create_user(
+                lender = User.objects.create_user(
                     first_name=first,
                     last_name=last,
                     email=f"{first}.{last}@example.com",
                     password=fake.name(),
-                    role=models.UserRole.LENDER,
                 )
+                assign_user_group(lender, "lender")
+
                 helpers.make_payment(lender, Money(100, "USD"))
 
         def create_n_borrowers(n):
@@ -52,29 +61,27 @@ class Command(BaseCommand):
                 name = fake.name()
                 first, last = list(map(str.lower, name.split()))[:2]
 
-                user = get_user_model().objects.create_user(
+                borrower = User.objects.create_user(
                     first_name=first,
                     last_name=last,
                     email=f"{first}.{last}@example.com",
                     password=fake.name(),
                 )
+                assign_user_group(borrower, "borrower")
                 models.LoanProfile.objects.create(
-                    user=user,
-                    photoURL=fake.image_url(width=640, height=480),
+                    user=borrower,
+                    profile_img=fake.image_url(width=640, height=480),
                     title=fake.company(),
                     description=fake.paragraph(nb_sentences=4),
-                    categories="agribusiness",
-                    loan_duration_months=fake.random_number(digits=2),
-                    total_amount_required=Money(50, "USD"),
+                    loan_duration=fake.random_number(digits=2),
+                    target_amount=Money(50, "USD"),
                     deadline_to_receive_loan=fake.date_between(
                         start_date="today", end_date=LOAN_PERIOD
                     ),
                 )
 
         def create_transactions():
-            random_lenders = models.User.objects.filter(
-                role=models.UserRole.LENDER
-            ).order_by("?")[:LENDER_COUNT]
+            random_lenders = get_all_lenders()[:LENDER_COUNT]
             random_loan_profiles = models.LoanProfile.objects.order_by("?")[
                 :BORROWER_COUNT
             ]

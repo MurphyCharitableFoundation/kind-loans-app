@@ -1,12 +1,11 @@
-"""
-URLs for Payment
-"""
+"""Payment URLs."""
 
 from django.urls import path
+
 from .views import (
+    CancelPaymentView,
     CreatePayPalPaymentView,
     ExecutePayPalPaymentView,
-    CancelPaymentView,
     ExecutePayPalPayoutView,
 )
 

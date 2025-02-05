@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+
+{% block form_top %}
+
+{% if not original.is_applied %}
+<input
+  type="submit"
+  name="_apply_to_lenders"
+  value="Apply to Lenders"
+  class="grp-button grp-default"
+/>
+{% endif %}
+
+{% endblock %}

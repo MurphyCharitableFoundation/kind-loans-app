@@ -2,14 +2,10 @@
 Views for the user API.
 """
 
-from rest_framework import generics, authentication, permissions
+from rest_framework import authentication, generics, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-
-from user.serializers import (
-    UserSerializer,
-    AuthTokenSerializer,
-)
+from user.serializers import AuthTokenSerializer, UserSerializer
 
 
 class CreateUserView(generics.CreateAPIView):
