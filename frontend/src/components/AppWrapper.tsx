@@ -9,13 +9,23 @@ export default function AppWrapper({
   title: string;
   children: React.ReactNode;
 }) {
+  // const token = useSelector((state:RootState) => state.auth.token);
+  const token = true;
   return (
     <>
       <Header sectionTitle={title} />
-      <Container maxWidth="lg" sx={{ minHeight: "calc(100dvh - 120px)", py: 2, mb: "56px" }}>
+      <Container maxWidth={false} sx={{
+          minHeight: "calc(100dvh - 120px)",
+          py: 2,
+          mb: "56px",
+          margin: 0,
+          padding: 0,
+      }}>
         {children}
       </Container>
-      <BottomNavBar />
+      {
+      token && <BottomNavBar /> 
+      }
     </>
   );
 }

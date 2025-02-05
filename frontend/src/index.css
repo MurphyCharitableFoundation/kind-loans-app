@@ -1,3 +1,8 @@
+* {
+  box-shadow: none !important;  /* Removes all box shadows */
+  text-shadow: none !important; /* Removes all text shadows */
+}
+
 :root {
   font-family: 'Roboto', sans-serif;
   font-synthesis: none;
