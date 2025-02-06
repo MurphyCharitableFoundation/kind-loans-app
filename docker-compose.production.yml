@@ -1,0 +1,58 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        - DEV=false
+    command: >
+      sh -c "python manage.py wait_for_db &&
+             python manage.py migrate &&
+             gunicorn app.wsgi:application --bind 0.0.0.0:8000"
+    env_file:
+      - .env.production
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - NODE_ENV=production
+    command: sh -c "npm run build"
+    env_file:
+      - .env.production
+
+  nginx:
+    image: nginx:1.21.6-alpine
+    platform: linux/amd64
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+      - ./frontend/dist:/var/www/frontend
+      - ./backend/core/static:/var/www/backend/static
+    env_file:
+      - .env.production
+    depends_on:
+      - backend
+      - frontend
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw    
+
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - prod-db-data:/var/lib/postgresql/data
+    env_file:
+      - .env.production
+
+volumes:
+  prod-db-data:
