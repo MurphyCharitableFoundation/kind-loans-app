@@ -46,23 +46,6 @@ These commands should resolve this issue.
 
 - localhost:3000 - React application
 
-## Production SSL Setup
-
-1. Ensure your server has a public IP address accessible from the internet
-2. Test the SSL certificate generation first with dry-run:
-   ```bash
-   docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ --dry-run -d example.org
-   ```
-3. After successful dry-run, generate the actual certificate:
-   ```bash
-   docker compose run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org
-   ```
-4. Set up automatic renewal (certificates expire every 3 months):
-   ```bash
-   docker compose run --rm certbot renew
-   ```
-   Consider adding this command to a cron job to run monthly.
-
 ## Questions
 
 - frontend: how do we leverage figma to (easily) create the frontend?
