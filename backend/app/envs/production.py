@@ -1,6 +1,7 @@
 """
 Production settings for app project.
 """
+from .base import os, BASE_DIR  # Import specific names from base
 from .development import *  # noqa
 
 DEBUG = False
@@ -8,7 +9,9 @@ DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-BASE_FRONTEND_URL = os.environ.get('BASE_FRONTEND_URL', 'https://kindloans.mcf.com')
+BASE_FRONTEND_URL = os.environ.get(
+    'BASE_FRONTEND_URL', 'https://kindloans.mcf.com'
+)
 
 ALLOWED_HOSTS = [
     'kindloans.mcf.com',
@@ -42,7 +45,9 @@ EMAIL_USE_TLS = True
 
 # Static files
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = (
+    'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+)
 
 # PayPal settings
 PAYPAL_TEST = False
