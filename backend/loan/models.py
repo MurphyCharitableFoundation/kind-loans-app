@@ -1,5 +1,6 @@
 """Database models."""
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
@@ -8,9 +9,22 @@ from djmoney.money import Money
 from loan.operations import app_to_borrower, borrower_to_app
 from model_utils.models import TimeStampedModel
 
-from .utils import one_year_from_now
+from .utils import one_year_from_now_date
 
 User = get_user_model()
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def create_category(cls, name):
+        """Creates and returns a new category instance."""
+        category, created = cls.objects.get_or_create(name=name)
+        return category
 
 
 class LoanProfileStatus(models.IntegerChoices):
@@ -31,16 +45,29 @@ class LoanProfile(TimeStampedModel):
         help_text="The user associated with the loan profile.",
     )
     profile_img = models.URLField(
-        help_text="The URL of the photo for the loan profile."
+        help_text="The URL of the photo for the loan profile.",
+        null=True,
+        blank=True,
     )
     title = models.CharField(
-        max_length=255, help_text="The title of the loan profile."
+        max_length=255,
+        help_text="The title of the loan profile.",
+        null=True,
+        blank=True,
     )
     description = models.TextField(
-        help_text="The description of the loan profile."
+        help_text="The description of the loan profile.", null=True, blank=True
+    )
+    story = models.TextField(
+        help_text="A short description of the user and their reason why.",
+        null=True,
+        blank=True,
     )
     loan_duration = models.IntegerField(
-        help_text="The duration of the loan in months.", default=12
+        help_text="The duration of the loan in months.",
+        default=12,
+        null=True,
+        blank=True,
     )
     target_amount = MoneyField(
         max_digits=10,
@@ -57,18 +84,59 @@ class LoanProfile(TimeStampedModel):
     )
     deadline_to_receive_loan = models.DateField(
         help_text="The deadline to receive the loan.",
-        default=one_year_from_now,
+        default=one_year_from_now_date,
     )
     status = models.IntegerField(
         choices=LoanProfileStatus.choices,
         default=LoanProfileStatus.PENDING,
         help_text="The status of the loan profile.",
     )
+    categories = models.ManyToManyField(
+        Category, related_name="loan_profiles", blank=True
+    )
 
     class Meta:
         verbose_name = "Loan Profile"
         verbose_name_plural = "Loan Profiles"
         ordering = ["-created"]
+
+    @classmethod
+    def create_loan_profile(
+        cls,
+        user,
+        title,
+        target_amount,
+        description="",
+        story="",
+        loan_duration=12,
+        deadline_to_receive_loan=None,
+        category_names=None,
+    ):
+        """Creates a new LoanProfile instance and assigns categories."""
+
+        if not isinstance(target_amount, Money):
+            target_amount = Money(
+                target_amount, settings.DEFAULT_MONEY_CURRENCY
+            )
+
+        loan_profile = cls.objects.create(
+            user=user,
+            title=title,
+            target_amount=target_amount,
+            description=description,
+            story=story,
+            loan_duration=loan_duration,
+            deadline_to_receive_loan=deadline_to_receive_loan
+            or one_year_from_now_date(),
+        )
+
+        # Add categories (creating if necessary)
+        if category_names:
+            for name in category_names:
+                category = Category.create_category(name)
+                loan_profile.categories.add(category)
+
+        return loan_profile
 
     def __str__(self):
         return f"Loan Profile: {self.title} by {self.user.get_full_name()}"

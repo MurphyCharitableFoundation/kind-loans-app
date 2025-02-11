@@ -5,9 +5,12 @@
 1. Install Docker
 1. Run `docker compose build` to build the docker images
 1. Run `docker compose up` to start the containers
-1. Run `docker compose run --rm backend sh -c "python manage.py createsuperuser"` to create a superuser
-1. Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6` to generate sample data
-1. Run `docker compose run --rm backend sh -c "python manage.py create_tags` to create tags for loan profiles
+1. Run `docker compose run --rm backend sh -c "python manage.py
+   createsuperuser"` to create a superuser
+1. Run `docker compose run --rm backend sh -c "python manage.py
+   create_groups"` to generate the following groups: admin, lender, borrower
+1. Run `docker compose run --rm backend sh -c "python manage.py generate_sample_data 2 6"` to generate sample data
+1. Run `docker compose run --rm backend sh -c "python manage.py create_tags"` to create tags for loan profiles
 1. Run `docker compose down` to stop the containers
 
 ## Backend

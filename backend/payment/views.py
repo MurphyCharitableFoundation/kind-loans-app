@@ -5,11 +5,9 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from djmoney.money import Money
 from loan.helpers import make_payment, make_payout
-from payment.services import (
-    create_paypal_transaction,
-    execute_paypal_payout_transaction,
-    execute_paypal_transaction,
-)
+from payment.services import (create_paypal_transaction,
+                              execute_paypal_payout_transaction,
+                              execute_paypal_transaction)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
