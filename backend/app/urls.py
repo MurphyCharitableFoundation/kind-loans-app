@@ -26,8 +26,9 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    path("user/", include("user.urls")),
-    path("payment/", include("payment.urls")),
-    path("", include("hordak.urls", namespace="hordak")),
+    path("api/user/", include("user.urls")),
+    path("api/loan/", include("loan.urls")),
+    path("api/payment/", include("payment.urls")),
     path("api/auth/", include("authentication.urls")),
+    path("hordak/", include("hordak.urls", namespace="hordak")),
 ]

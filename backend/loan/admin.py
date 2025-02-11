@@ -1,11 +1,8 @@
 """Django admin customization."""
 
 from django.contrib import admin, messages
-from django.contrib.admin.options import (
-    HttpResponseRedirect,
-    csrf_protect_m,
-    unquote,
-)
+from django.contrib.admin.options import (HttpResponseRedirect, csrf_protect_m,
+                                          unquote)
 from loan import models
 
 

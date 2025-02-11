@@ -1,5 +1,7 @@
 """Helpers for Loan app."""
 
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
@@ -8,6 +10,8 @@ from .validators import (
     validate_contribution_amount_from_lender,
     validate_repayment_amount,
 )
+
+User = get_user_model()
 
 
 def make_payment(lender, amount, **kwargs):
@@ -89,3 +93,30 @@ def make_repayment(borrower, amount, **kwargs):
 
     except Exception as e:
         raise ValidationError(f"Repayment failed: {str(e)}")
+
+
+def create_user_with_group(
+    email: str, password: str, group_name: str, **kwargs
+) -> User:
+    """
+    Create a user given email and password, assigns them to a group.
+
+    - The group name is **case-insensitive** and is always stored in lowercase.
+    - If the group does not exist,
+      it will be created **only if it's in the allowed list**.
+    - If the group is not in the allowed list, it will be ignored.
+
+    Allowed groups: ["admin", "lender", "borrower"]
+    """
+    allowed_groups = {"admin", "lender", "borrower"}
+
+    # Normalize group name (case-insensitive, lowercase)
+    normalized_group_name = group_name.lower()
+
+    user = User.objects.create_user(email=email, password=password, **kwargs)
+
+    if normalized_group_name in allowed_groups:
+        group, _ = Group.objects.get_or_create(name=normalized_group_name)
+        user.groups.add(group)
+
+    return user

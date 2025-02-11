@@ -2,12 +2,8 @@
 
 from django.urls import path
 
-from .views import (
-    CancelPaymentView,
-    CreatePayPalPaymentView,
-    ExecutePayPalPaymentView,
-    ExecutePayPalPayoutView,
-)
+from .views import (CancelPaymentView, CreatePayPalPaymentView,
+                    ExecutePayPalPaymentView, ExecutePayPalPayoutView)
 
 urlpatterns = [
     # create a payment and redirect the user to PayPal for approval

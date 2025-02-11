@@ -2,20 +2,26 @@
 Tests for model interactions.
 """
 
-from core import helpers, models
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from djmoney.money import Money
+from loan.helpers import (create_user_with_group, make_contribution,
+                          make_repayment)
+from loan.models import LoanProfile
+
+User = get_user_model()
 
 
 class ContributionAndRepaymentTests(TestCase):
     def setUp(self):
         password = "testpass123"
 
-        self.b_user_a = get_user_model().objects.create_user(
-            email="borrower@example.com", password=password
+        self.b_user_a = create_user_with_group(
+            email="borrower@example.com",
+            password=password,
+            group_name="borrower",
         )
-        self.borrower_target_100 = models.LoanProfile.objects.create(
+        self.borrower_target_100 = LoanProfile.objects.create(
             user=self.b_user_a,
             title="Paid in Full",
             profile_img="www.example.com/photo.jpg",
@@ -26,34 +32,32 @@ class ContributionAndRepaymentTests(TestCase):
             status=1,
         )
 
-        self.lender_a = get_user_model().objects.create_user(
+        self.lender_a = create_user_with_group(
             email="lenderA@example.com",
             password=password,
-            role=models.UserRole.LENDER,
+            group_name="lender",
             amount_available=Money(50, "USD"),
         )
-        self.lender_b = get_user_model().objects.create_user(
+        self.lender_b = create_user_with_group(
             email="lenderB@example.com",
             password=password,
-            role=models.UserRole.LENDER,
+            group_name="lender",
             amount_available=Money(50, "USD"),
         )
 
-        self.contribution_a = helpers.make_contribution(
+        self.contribution_a = make_contribution(
             self.lender_a,
             self.borrower_target_100,
             Money(50, "USD"),
         )
-        self.contribution_b = helpers.make_contribution(
+        self.contribution_b = make_contribution(
             self.lender_b,
             self.borrower_target_100,
             Money(50, "USD"),
         )
 
     def test_repay_full_contributions_from_single_repayment(self):
-        repayment = helpers.make_repayment(
-            self.borrower_target_100, Money(100, "USD")
-        )
+        repayment = make_repayment(self.borrower_target_100, Money(100, "USD"))
 
         self.assertEqual(self.lender_a.amount_available, Money(0, "USD"))
         self.assertEqual(self.lender_b.amount_available, Money(0, "USD"))
@@ -70,7 +74,7 @@ class ContributionAndRepaymentTests(TestCase):
 
     def test_repay_full_contributions_from_multiple_repayment(self):
         repayment_amount_a = Money(40, "USD")
-        repayment = helpers.make_repayment(
+        repayment = make_repayment(
             self.borrower_target_100, repayment_amount_a
         )
 
@@ -89,7 +93,7 @@ class ContributionAndRepaymentTests(TestCase):
 
     def test_repay_partial_contributions_from_single_repayment(self):
         repayment_amount_a = Money(50, "USD")
-        repayment = helpers.make_repayment(
+        repayment = make_repayment(
             self.borrower_target_100, repayment_amount_a
         )
 
@@ -108,7 +112,7 @@ class ContributionAndRepaymentTests(TestCase):
 
     def test_repay_partial_contributions_from_multiple_repayment(self):
         repayment_amount_a = Money(20, "USD")
-        repayment = helpers.make_repayment(
+        repayment = make_repayment(
             self.borrower_target_100, repayment_amount_a
         )
 
@@ -126,7 +130,7 @@ class ContributionAndRepaymentTests(TestCase):
         self.assertEqual(self.lender_b.amount_available, Money(10, "USD"))
 
         repayment_amount_b = Money(30, "USD")
-        repayment = helpers.make_repayment(
+        repayment = make_repayment(
             self.borrower_target_100, repayment_amount_b
         )
 

@@ -31,6 +31,10 @@ class Command(BaseCommand):
         BORROWER_COUNT = kwargs["borrower_count"]
         LOAN_PERIOD = timedelta(days=500)
 
+        def ensure_groups():
+            for group_name in ["admin", "lender", "borrower"]:
+                Group.objects.get_or_create(name=group_name)
+
         def get_amount(n=3):
             return fake.pydecimal(left_digits=3, right_digits=2, positive=True)
 
@@ -98,6 +102,11 @@ class Command(BaseCommand):
                         loan_profile, loan_profile.total_raised()
                     )
                     loan_profile.make_payment()
+
+        ensure_groups()
+        self.stdout.write(
+            self.style.SUCCESS("Admin, Lender, and Borrower groups created.")
+        )
 
         create_n_lenders(LENDER_COUNT)
         self.stdout.write(
