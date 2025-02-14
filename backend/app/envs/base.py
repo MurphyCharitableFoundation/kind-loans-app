@@ -179,3 +179,4 @@ PAYPAL_RECEIVER_EMAIL = ""
 
 # Django Money
 SERIALIZATION_MODULES = {"json": "djmoney.serializers"}
+DEFAULT_MONEY_CURRENCY = "USD"
