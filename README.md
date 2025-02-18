@@ -44,7 +44,7 @@ These commands should resolve this issue.
 - Run `npm install` to install the dependencies so that your IDE can recognize them
 - Don't run `npm start` as the frontend is served in the frontend container
 
-- localhost - React application
+- localhost:3000 - React application
 
 ## Questions
 
