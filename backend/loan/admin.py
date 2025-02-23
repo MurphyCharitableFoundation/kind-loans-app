@@ -1,8 +1,11 @@
 """Django admin customization."""
 
 from django.contrib import admin, messages
-from django.contrib.admin.options import (HttpResponseRedirect, csrf_protect_m,
-                                          unquote)
+from django.contrib.admin.options import (
+    HttpResponseRedirect,
+    csrf_protect_m,
+    unquote,
+)
 from loan import models
 
 
@@ -14,6 +17,8 @@ class LoanProfileAdmin(admin.ModelAdmin):
         "target_amount",
         "sum_of_contributions",
         "sum_of_repayments",
+        "city",
+        "country",
     )
     readonly_fields = (
         "is_paid_raised_amount",
@@ -148,6 +153,7 @@ class RepaymentAdmin(admin.ModelAdmin):
         )
 
 
+admin.site.register(models.Category)
 admin.site.register(models.LoanProfile, LoanProfileAdmin)
 
 admin.site.register(models.Contribution, ContributionAdmin)
