@@ -6,6 +6,9 @@ import {NextIcon, PrevIcon} from "../../../assets/icons.tsx";
 import "swiper/css";
 import 'swiper/css/navigation';
 import Button from "@mui/material/Button";
+import {useQuery} from "@tanstack/react-query";
+import LoanProfile from "../../../types/LoanProfile";
+import {Error} from "@mui/icons-material";
 
 const LoanPofileTest = [
     {
@@ -27,6 +30,26 @@ const LoanPofileTest = [
 
 
 function LandPageCarousel(){
+    const { data, error, isLoading } = useQuery<LoanProfile[]>({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            const response = await fetch("http://localhost:8000/api/loan/profile");
+            if (!response.ok) {
+                throw Error(<Error>"Network response was not ok"</Error>);
+            }
+            console.log(response)
+            return response.json();
+        },
+    });
+
+    if (error) {
+        return (<Box>
+            {error.message}
+        </Box>)
+    }
+
+    console.log(data)
+
     return (
         <Box sx={{display: "flex",justifyContent: "space-between",alignItems: "center",width: "100%"}}>
             <Button className="custom-prev">
@@ -39,8 +62,8 @@ function LandPageCarousel(){
                         prevEl: ".custom-prev",
                     }} modules={[Navigation]} loop={true}
             >
-                {LoanPofileTest.map((item,i) => (
-                    <SwiperSlide >
+                {data?.map((item,i) => (
+                    <SwiperSlide key={i}>
                         <div key={i}
                              style={{
                                  display: "flex",
@@ -48,7 +71,7 @@ function LandPageCarousel(){
                                  alignItems: "center",
                              }}
                         >
-                            <BorrowerCard key={i} LoanPofile={item} />
+                            <BorrowerCard key={i} imgPath={item.profile_img} loanDescription={item.description} location={item.title} />
                         </div>
                     </SwiperSlide>
                 ))}

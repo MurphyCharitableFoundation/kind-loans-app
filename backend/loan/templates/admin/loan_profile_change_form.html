@@ -1,12 +1,10 @@
-{% extends "admin/change_form.html" %} {% block form_top %} {% if not
-original.is_paid_raised_amount and original.total_raised %}
+{% extends "admin/change_form.html" %} {% block form_top %} {% if not original.is_paid_raised_amount and original.total_raised %}
 <input
   type="submit"
   name="_get_payment"
   value="Get Loan Payment from Contribution(s) [{{original.total_raised}}]"
 />
-{% endif %} {% if not original.has_repaid and original.total_repaid %} {% if
-original.remaining_balance %}
+{% endif %} {% if not original.has_repaid and original.total_repaid %} {% if original.remaining_balance %}
 <input
   type="submit"
   name="_make_payment"
@@ -19,8 +17,7 @@ original.remaining_balance %}
   name="_make_payment"
   value="Make Loan Payment from Repayment(s) [{{original.total_repaid}}]"
 />
-{% endif %} {% endif %} {% if original.has_repaid and not
-original.has_applied_all_repayments %}
+{% endif %} {% endif %} {% if original.has_repaid and not original.has_applied_all_repayments %}
 <input
   type="submit"
   name="_apply_repayments"
