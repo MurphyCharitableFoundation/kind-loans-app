@@ -6,6 +6,11 @@ from .models import Category, LoanProfile
 
 class LoanProfileSerializer(serializers.ModelSerializer):
     target_amount = MoneyField(max_digits=12, decimal_places=2)
+    total_raised = MoneyField(max_digits=12, decimal_places=2, read_only=True)
+    total_repaid = MoneyField(max_digits=12, decimal_places=2, read_only=True)
+    remaining_balance = MoneyField(
+        max_digits=12, decimal_places=2, read_only=True
+    )
     categories = serializers.SlugRelatedField(
         many=True,
         slug_field="name",
@@ -25,9 +30,15 @@ class LoanProfileSerializer(serializers.ModelSerializer):
             "loan_duration",
             "deadline_to_receive_loan",
             "target_amount",
+            "total_raised",
+            "total_repaid",
+            "remaining_balance",
             "is_paid_raised_amount",
             "has_repaid",
             "categories",
+            "country",
+            "city",
+            "created",
             "modified",
         ]
         read_only_fields = [
@@ -37,6 +48,9 @@ class LoanProfileSerializer(serializers.ModelSerializer):
             "deadline_to_receive_loan",
             "is_paid_raised_amount",
             "loan_duration",
+            "total_raised",
+            "total_repaid",
+            "remaining_balance",
         ]
 
     def create(self, validated_data):
@@ -46,6 +60,7 @@ class LoanProfileSerializer(serializers.ModelSerializer):
 
         # Add categories if provided
         for category in categories_data:
+            category = Category.create_category(name=category)
             loan_profile.categories.add(category)
 
         return loan_profile

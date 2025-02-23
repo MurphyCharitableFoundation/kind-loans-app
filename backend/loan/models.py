@@ -6,16 +6,22 @@ from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-from loan.operations import app_to_borrower, borrower_to_app
+
+
 from model_utils.models import TimeStampedModel
 
+from .helpers import make_repayment
 from .utils import one_year_from_now_date
+from .operations import app_to_borrower, borrower_to_app
 
 User = get_user_model()
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name_plural = "Categories"
 
     def __str__(self):
         return self.name
@@ -94,6 +100,8 @@ class LoanProfile(TimeStampedModel):
     categories = models.ManyToManyField(
         Category, related_name="loan_profiles", blank=True
     )
+    country = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = "Loan Profile"
@@ -111,8 +119,9 @@ class LoanProfile(TimeStampedModel):
         loan_duration=12,
         deadline_to_receive_loan=None,
         category_names=None,
+        **extra_fields,
     ):
-        """Creates a new LoanProfile instance and assigns categories."""
+        """Create a new LoanProfile instance and assigns categories."""
 
         if not isinstance(target_amount, Money):
             target_amount = Money(
@@ -128,6 +137,7 @@ class LoanProfile(TimeStampedModel):
             loan_duration=loan_duration,
             deadline_to_receive_loan=deadline_to_receive_loan
             or one_year_from_now_date(),
+            **extra_fields,
         )
 
         # Add categories (creating if necessary)
@@ -141,11 +151,8 @@ class LoanProfile(TimeStampedModel):
     def __str__(self):
         return f"Loan Profile: {self.title} by {self.user.get_full_name()}"
 
-    # TODO: Give this from ops:app_to_borrower
     def total_raised(self):
-        """
-        Calculate the total amount raised for this borrower.
-        """
+        """Calculate the total amount raised for this borrower."""
         total = (
             self.contributions.aggregate(total=models.Sum("amount"))["total"]
             or 0
@@ -153,40 +160,31 @@ class LoanProfile(TimeStampedModel):
 
         return Money(total, "USD")
 
-    # TODO: To compute (total) amount for ops:borrower_to_app
     def total_repaid(self):
-        """
-        Calculate the total amount repaid by this borrower.
-        """
+        """Calculate the total amount repaid by this borrower."""
         total = (
             self.repayments.aggregate(total=models.Sum("amount"))["total"] or 0
         )
 
         return Money(total, "USD")
 
-    # TODO: To compute bad-debt for ops:borrower_to_app
     def remaining_balance(self):
-        """
-        Calculate the remaining balance to be repaid.
-        """
+        """Calculate the remaining balance to be repaid."""
         return self.total_raised() - self.total_repaid()
 
     def has_applied_all_repayments(self):
+        """If all repayments are applied, then True."""
         return all(r.is_applied for r in self.repayments.all())
 
     def get_payment(self):
-        """
-        REAL-MONEY: Get payment from app.
-        """
+        """REAL-MONEY: Get payment from app."""
         self.is_paid_raised_amount = True
         self.save()
 
         return app_to_borrower(self, self.total_raised())
 
     def make_payment(self):
-        """
-        REAL-MONEY: Make payment to app.
-        """
+        """REAL-MONEY: Make payment to app."""
         self.has_repaid = True
         self.save()
 
@@ -194,18 +192,18 @@ class LoanProfile(TimeStampedModel):
             self, self.total_repaid(), self.remaining_balance()
         )
 
+    def make_repayment(self, amount):
+        """Make repayment."""
+        return make_repayment(self, amount)
+
     def apply_repayments(self):
-        """
-        Apply all repayments to contributors proportionally
-        """
+        """Apply all repayments to contributors proportionally."""
         repayments = self.repayments.all()
         return list(map(lambda r: r.repay_lenders(), repayments))
 
 
 class Contribution(TimeStampedModel):
-    """
-    Represents a financial contribution from a lender to a borrower.
-    """
+    """Represents a financial contribution from a lender to a borrower."""
 
     lender = models.ForeignKey(
         User,
