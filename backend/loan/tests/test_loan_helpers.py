@@ -41,7 +41,7 @@ class CreateUserWithGroupTests(TestCase):
         self.assertTrue(
             User.objects.filter(email="testunknown@example.com").exists()
         )
-        self.assertEqual(user.groups.count(), 0)  # ✅ No groups assigned
+        self.assertEqual(user.groups.count(), 0)  # No groups assigned
 
     def test_create_user_creates_group_if_missing(self):
         """Test that a missing valid group is created automatically
