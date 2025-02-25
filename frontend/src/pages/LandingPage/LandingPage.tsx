@@ -6,7 +6,7 @@ import { BorrowerCardWithProgress } from './components/BorrowerCard';
 import LandPageCarousel from './components/LandingPageCarousel';
 import SortFilterPopover from './components/SortFilterPopper';
 import  intro from "../../assets/intro.png";
-import {useRef, useState} from "react";
+import {useRef, useState, Ref} from "react";
 import {useQuery} from "@tanstack/react-query";
 import LoanProfile from "../../types/LoanProfile";
 import {Error} from "@mui/icons-material";
@@ -187,7 +187,7 @@ function LandingStories() {
     );
 }
 
-function LandingLoanList({targetRef}:{targetRef: React.Ref<HTMLDivElement>}) {
+function LandingLoanList({targetRef}:{targetRef: Ref<HTMLDivElement>}) {
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
