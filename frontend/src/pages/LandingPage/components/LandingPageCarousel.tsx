@@ -29,26 +29,7 @@ const LoanPofileTest = [
 ]
 
 
-function LandPageCarousel(){
-    const { data, error, isLoading } = useQuery<LoanProfile[]>({
-        queryKey: ["profile"],
-        queryFn: async () => {
-            const response = await fetch("http://localhost:8000/api/loan/profile");
-            if (!response.ok) {
-                throw Error(<Error>"Network response was not ok"</Error>);
-            }
-            console.log(response)
-            return response.json();
-        },
-    });
-
-    if (error) {
-        return (<Box>
-            {error.message}
-        </Box>)
-    }
-
-    console.log(data)
+function LandPageCarousel({profiles}){
 
     return (
         <Box sx={{display: "flex",justifyContent: "space-between",alignItems: "center",width: "100%"}}>
@@ -62,7 +43,7 @@ function LandPageCarousel(){
                         prevEl: ".custom-prev",
                     }} modules={[Navigation]} loop={true}
             >
-                {data?.map((item,i) => (
+                {profiles?.map((item,i) => (
                     <SwiperSlide key={i}>
                         <div key={i}
                              style={{

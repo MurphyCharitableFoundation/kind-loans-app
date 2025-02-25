@@ -170,6 +170,24 @@ function LandingHowItWorks() {
 }
 
 function LandingStories() {
+    const { data, error } = useQuery<LoanProfile[]>({
+        queryKey: ["story-profile"],
+        queryFn: async () => {
+            const response = await fetch("http://localhost:8000/api/loan/profile?type=stories");
+            if (!response.ok) {
+                throw Error(<Error>"Network response was not ok"</Error>);
+            }
+            console.log(response)
+            return response.json();
+        },
+    });
+
+    if (error) {
+        return (<Box>
+            {error.message}
+        </Box>)
+    }
+
     return (
         <Box mt='1rem' mb='1rem'>
             <Box margin={4}>
@@ -186,14 +204,14 @@ function LandingStories() {
             </Box>
             <Box mt='1rem' mb='1rem'>
                 {/* just leave a singe card here for now */}
-                <LandPageCarousel />
+                <LandPageCarousel profiles={data}/>
                 {/* <BorrowerCard /> */}
             </Box>
         </Box>
     );
 }
 
-function LandingLoanList({targetRef}) {
+function LandingLoanList({targetRef}:{targetRef: React.Ref<HTMLDivElement>}) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -203,6 +221,23 @@ function LandingLoanList({targetRef}) {
         setOpen(false);
     };
 
+    const { data, error } = useQuery<LoanProfile[]>({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            const response = await fetch("http://localhost:8000/api/loan/profile");
+            if (!response.ok) {
+                throw Error(<Error>"Network response was not ok"</Error>);
+            }
+            console.log(response)
+            return response.json();
+        },
+    });
+
+    if (error) {
+        return (<Box>
+            {error.message}
+        </Box>)
+    }
 
     return (
         <Box ref={targetRef} margin={4} mt='1rem' mb='1rem'>
@@ -232,8 +267,13 @@ function LandingLoanList({targetRef}) {
             {/* single card and a filter */}
             {/* filter working on progress */}
             <Box marginTop={2}>
-                {LoanPofileTest?.map((item) => (
-                    <BorrowerCardWithProgress imgPath={item.imgPath} location={item.location} timeLine={item.timeLine} loanTitle={item.loanTitle} fundingProgress={item.fundingProgress} progressBarPercent={item.progressbarPercent}/>
+                {data?.map((item) => (
+                    <BorrowerCardWithProgress imgPath={item.profile_img}
+                                              location={item.country+','+item.city}
+                                              deadLine={item.deadline_to_receive_loan}
+                                              loanTitle={item.title}
+                                              remainingBalance={item.remaining_balance}
+                                              targetAmount={item.target_amount}/>
                     ))}
             </Box>
             <Box textAlign="center" mt="2rem" mb="7rem">
