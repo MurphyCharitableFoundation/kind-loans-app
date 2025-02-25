@@ -1,5 +1,4 @@
-import * as React from 'react';
-import {Box, Button, SvgIcon} from '@mui/material';
+import {Box, Button} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import SearchDialog from './components/SearchDialog';
 import Divider from '@mui/material/Divider';
@@ -19,29 +18,6 @@ import {
     StayingConnectedIcon
 } from "../../assets/icons.tsx";
 import Card from "@mui/material/Card";
-
-// should import from data, dont know how to do that currently :(
-// testing area-----------------------------------
-const LoanPofileTest = [
-    {
-        imgPath:"../../../public/free-images.avif",
-        loanTitle:"Help Tanya build her small fishing business",
-        location:"Bukedea, Uganda",
-        timeLine:"xx days",
-        progressbarPercent:50,
-        fundingProgress:"400"
-    },
-    {
-        imgPath:"../../../public/free-images.avif",
-        loanTitle:"Help Tanya build her small fishing business",
-        location:"Bukedea, Uganda",
-        timeLine:"xx days",
-        progressbarPercent:50,
-        fundingProgress:"400"
-    },
-]
-
-//testing area ends-----------------------------------
 
 function Landingpage(){
     const targetRef = useRef<HTMLDivElement>(null);
@@ -212,7 +188,7 @@ function LandingStories() {
 }
 
 function LandingLoanList({targetRef}:{targetRef: React.Ref<HTMLDivElement>}) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
