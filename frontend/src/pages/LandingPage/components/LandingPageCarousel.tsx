@@ -6,6 +6,9 @@ import {NextIcon, PrevIcon} from "../../../assets/icons.tsx";
 import "swiper/css";
 import 'swiper/css/navigation';
 import Button from "@mui/material/Button";
+import {useQuery} from "@tanstack/react-query";
+import LoanProfile from "../../../types/LoanProfile";
+import {Error} from "@mui/icons-material";
 
 const LoanPofileTest = [
     {
@@ -26,7 +29,8 @@ const LoanPofileTest = [
 ]
 
 
-function LandPageCarousel(){
+function LandPageCarousel({profiles}){
+
     return (
         <Box sx={{display: "flex",justifyContent: "space-between",alignItems: "center",width: "100%"}}>
             <Button className="custom-prev">
@@ -39,8 +43,8 @@ function LandPageCarousel(){
                         prevEl: ".custom-prev",
                     }} modules={[Navigation]} loop={true}
             >
-                {LoanPofileTest.map((item,i) => (
-                    <SwiperSlide >
+                {profiles?.map((item,i) => (
+                    <SwiperSlide key={i}>
                         <div key={i}
                              style={{
                                  display: "flex",
@@ -48,7 +52,7 @@ function LandPageCarousel(){
                                  alignItems: "center",
                              }}
                         >
-                            <BorrowerCard key={i} LoanPofile={item} />
+                            <BorrowerCard key={i} imgPath={item.profile_img} loanDescription={item.description} location={item.title} />
                         </div>
                     </SwiperSlide>
                 ))}

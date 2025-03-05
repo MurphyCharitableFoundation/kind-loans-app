@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {Box, Button} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import SearchDialog from './components/SearchDialog';
@@ -7,20 +6,18 @@ import { BorrowerCardWithProgress } from './components/BorrowerCard';
 import LandPageCarousel from './components/LandingPageCarousel';
 import SortFilterPopover from './components/SortFilterPopper';
 import  intro from "../../assets/intro.png";
-import {useRef} from "react";
-
-// should import from data, dont know how to do that currently :(
-// testing area-----------------------------------
-const LoanPofileTest = {
-    imgPath:"../../../public/free-images.avif",
-    loanTitle:"Help Tanya build her small fishing business",
-    location:"Bukedea, Uganda",
-    timeLine:"xx days",
-    progressbarPercent:50,
-    fundingProgress:"400"
-}
-
-//testing area ends-----------------------------------
+import {useRef, useState, Ref} from "react";
+import {useQuery} from "@tanstack/react-query";
+import LoanProfile from "../../types/LoanProfile";
+import {Error} from "@mui/icons-material";
+import {
+    DistributingFundsIcon,
+    FundingIcon,
+    PostingIcon,
+    RepaymentIcon,
+    StayingConnectedIcon
+} from "../../assets/icons.tsx";
+import Card from "@mui/material/Card";
 
 function Landingpage(){
     const targetRef = useRef<HTMLDivElement>(null);
@@ -37,6 +34,8 @@ function Landingpage(){
             <LandingIntro onAction={handleScroll} />
             <Divider />
             <LandingVision />
+            <Divider />
+            <LandingHowItWorks />
             <Divider />
             <LandingStories />
             <Divider />
@@ -94,7 +93,77 @@ function LandingVision() {
     );
 }
 
+const howItWorks = [
+    {
+        icon: PostingIcon,
+        title: "Step 1: Posting",
+        description: "Women entrepreneurs who’ve been carefully vetted and trained in financial literacy by MCF post their funding requests on Kind Loans."
+    },
+    {
+        icon: FundingIcon,
+        title: "Step 2: Funding",
+        description: "Lenders (like you) browse requests and choose which ones to support - 100% of your loan goes directly to them."
+    },
+    {
+        icon: DistributingFundsIcon,
+        title: "Step 3: Distributing Funds",
+        description: "Once a request receives enough support, MCF distributes the money and the repayment period begins."
+    },
+    {
+        icon: StayingConnectedIcon,
+        title: "Step 4: Staying Connected",
+        description: "Every 3 months, you'll receive updates directly from the entrepreneur about how your support is helping their business grow."
+    },
+    {
+        icon: RepaymentIcon,
+        title: "Step 5: Repayment",
+        description: "At the end of the loan period, you'll get your money back as Kind Loans credit, which you can withdraw or re-use to help another entrepreneur!"
+    },
+
+]
+
+function LandingHowItWorks() {
+
+    return (
+        <Box mt='1rem' mb='1rem' margin={4}>
+            <Typography variant={"h3"}>
+                How It <Typography variant={"h3"} component={"span"} sx={{color: "#4F9816"}}>Works</Typography>
+            </Typography>
+            {howItWorks.map((item, i) => (
+                <Card variant={"outlined"} key={i} sx={{height: "288px", gap: "40px", padding: "24px", border: "1", borderRadius:"12px", display: "flex", flexDirection: "column", marginTop: "24px"}} >
+                    <Box borderRadius={"12px"} sx={{backgroundColor: "#4C842214", justifyContent: "center", alignContent: "center", alignItems: "center", display: "flex"}} width={"64px"} height={"64px"}>
+                        <item.icon key={i} color={"#4C8422"} />
+                    </Box>
+                    <Box sx={{marginTop: "auto"}}>
+                        <Typography variant={"h3"}>{item.title}</Typography>
+                        <Typography variant={"body1"} paddingTop={"16px"}>{item.description}</Typography>
+                    </Box>
+                </Card>
+
+            ))}
+        </Box>
+    );
+}
+
 function LandingStories() {
+    const { data, error } = useQuery<LoanProfile[]>({
+        queryKey: ["story-profile"],
+        queryFn: async () => {
+            const response = await fetch("http://localhost:8000/api/loan/profile?type=stories");
+            if (!response.ok) {
+                throw Error(<Error>"Network response was not ok"</Error>);
+            }
+            console.log(response)
+            return response.json();
+        },
+    });
+
+    if (error) {
+        return (<Box>
+            {error.message}
+        </Box>)
+    }
+
     return (
         <Box mt='1rem' mb='1rem'>
             <Box margin={4}>
@@ -111,15 +180,15 @@ function LandingStories() {
             </Box>
             <Box mt='1rem' mb='1rem'>
                 {/* just leave a singe card here for now */}
-                <LandPageCarousel />
+                <LandPageCarousel profiles={data}/>
                 {/* <BorrowerCard /> */}
             </Box>
         </Box>
     );
 }
 
-function LandingLoanList({targetRef}) {
-    const [open, setOpen] = React.useState(false);
+function LandingLoanList({targetRef}:{targetRef: Ref<HTMLDivElement>}) {
+    const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -127,6 +196,24 @@ function LandingLoanList({targetRef}) {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const { data, error } = useQuery<LoanProfile[]>({
+        queryKey: ["profile"],
+        queryFn: async () => {
+            const response = await fetch("http://localhost:8000/api/loan/profile");
+            if (!response.ok) {
+                throw Error(<Error>"Network response was not ok"</Error>);
+            }
+            console.log(response)
+            return response.json();
+        },
+    });
+
+    if (error) {
+        return (<Box>
+            {error.message}
+        </Box>)
+    }
 
     return (
         <Box ref={targetRef} margin={4} mt='1rem' mb='1rem'>
@@ -156,7 +243,14 @@ function LandingLoanList({targetRef}) {
             {/* single card and a filter */}
             {/* filter working on progress */}
             <Box marginTop={2}>
-                <BorrowerCardWithProgress LoanPofile={LoanPofileTest}/>
+                {data?.map((item) => (
+                    <BorrowerCardWithProgress imgPath={item.profile_img}
+                                              location={item.country+','+item.city}
+                                              deadLine={item.deadline_to_receive_loan}
+                                              loanTitle={item.title}
+                                              remainingBalance={item.remaining_balance}
+                                              targetAmount={item.target_amount}/>
+                    ))}
             </Box>
             <Box textAlign="center" mt="2rem" mb="7rem">
                 <Button variant="outlined">
