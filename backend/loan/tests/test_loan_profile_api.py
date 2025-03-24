@@ -1,8 +1,10 @@
-from rest_framework.test import APITestCase, APIClient
-from rest_framework import status
 from django.contrib.auth import get_user_model
-from loan.models import LoanProfile, Category
 from djmoney.money import Money
+from loan.models import LoanProfile
+from rest_framework import status
+from rest_framework.test import APIClient, APITestCase
+
+from ..services import category_create
 
 User = get_user_model()
 
@@ -23,7 +25,7 @@ class LoanProfileAPITestCase(APITestCase):
         )
 
         # Create categories
-        self.category = Category.create_category(name="Education")
+        self.category = category_create(name="Education")
 
         # Create a LoanProfile
         self.loan_profile = LoanProfile.objects.create(

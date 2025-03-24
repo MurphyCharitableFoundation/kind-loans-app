@@ -4,8 +4,7 @@ from django.conf import settings
 from django.test import TestCase
 from djmoney.money import Money
 
-from loan.models import LoanProfile
-from loan.helpers import create_user_with_group
+from ..services import loan_profile_create, user_create
 
 
 class LoanProfileModelTests(TestCase):
@@ -13,13 +12,12 @@ class LoanProfileModelTests(TestCase):
 
     def test_create_loan_profile(self):
         """Test creating a new loan profile"""
-        user = create_user_with_group(
-            "test@example.com", "testpass123", "borrower"
-        )
-        loan_profile = LoanProfile.create_loan_profile(
+        user = user_create("test@example.com", "testpass123", "borrower")
+        loan_profile = loan_profile_create(
             user=user,
             title="Test title",
             description="Test description",
+            profile_img="https://www.example.com/photo.jpg",
             loan_duration=12,
             target_amount=Money("500.00", "USD"),
         )
@@ -30,10 +28,8 @@ class LoanProfileModelTests(TestCase):
 
     def test_create_loan_profile_with_numeric_target_amount(self):
         """Test creating a loan profile with a numeric target amount."""
-        user = create_user_with_group(
-            "test@example.com", "testpass123", "borrower"
-        )
-        loan_profile = LoanProfile.create_loan_profile(
+        user = user_create("test@example.com", "testpass123", "borrower")
+        loan_profile = loan_profile_create(
             user=user,
             title="Startup Loan",
             target_amount=15000.00,
@@ -50,10 +46,8 @@ class LoanProfileModelTests(TestCase):
 
     def test_create_loan_profile_without_categories(self):
         """Test creating a loan profile when categories are not provided."""
-        user = create_user_with_group(
-            "test@example.com", "testpass123", "borrower"
-        )
-        loan_profile = LoanProfile.create_loan_profile(
+        user = user_create("test@example.com", "testpass123", "borrower")
+        loan_profile = loan_profile_create(
             user=user,
             title="Business Loan",
             target_amount=Money(10000.00, "USD"),
@@ -65,10 +59,8 @@ class LoanProfileModelTests(TestCase):
 
     def test_create_loan_profile_with_categories(self):
         """Test creating a loan profile with categories."""
-        user = create_user_with_group(
-            "test@example.com", "testpass123", "borrower"
-        )
-        loan_profile = LoanProfile.create_loan_profile(
+        user = user_create("test@example.com", "testpass123", "borrower")
+        loan_profile = loan_profile_create(
             user=user,
             title="Education Loan",
             target_amount=Money(5000.00, "USD"),

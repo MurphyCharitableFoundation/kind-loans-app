@@ -1,7 +1,7 @@
 """
 Production settings for app project.
 """
-from .base import os, BASE_DIR  # Import specific names from base
+from .base import BASE_DIR, os  # Import specific names from base
 from .development import *  # noqa
 
 DEBUG = False

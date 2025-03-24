@@ -1,12 +1,12 @@
 """Django admin customization."""
 
 from django.contrib import admin, messages
-from django.contrib.admin.options import (
-    HttpResponseRedirect,
-    csrf_protect_m,
-    unquote,
-)
+from django.contrib.admin.options import (HttpResponseRedirect, csrf_protect_m,
+                                          unquote)
 from loan import models
+
+from .services import (borrower_apply_repayments, borrower_make_payment,
+                       borrower_receive_payment)
 
 
 class LoanProfileAdmin(admin.ModelAdmin):
@@ -32,10 +32,15 @@ class LoanProfileAdmin(admin.ModelAdmin):
     def get_payment(self, request, queryset):
         if isinstance(queryset, models.LoanProfile):
             obj = queryset
-            obj.get_payment()
+            borrower_receive_payment(obj)
             updated_count = 1
         else:
-            list(map(lambda lp: lp.get_payment(), queryset))
+            list(
+                map(
+                    lambda borrower: borrower_receive_payment(borrower),
+                    queryset,
+                )
+            )
             updated_count = queryset.count()
 
         msg = "Paid {} borrower(s) from respective contributions.".format(
@@ -44,24 +49,36 @@ class LoanProfileAdmin(admin.ModelAdmin):
         self.message_user(request, msg, messages.SUCCESS)
 
     def make_payment(self, request, queryset):
+        """Make payment for Loan Profile or several Loan Profiles."""
         if isinstance(queryset, models.LoanProfile):
             obj = queryset
-            obj.make_payment()
+            borrower_make_payment(obj)
             updated_count = 1
         else:
-            list(map(lambda lp: lp.make_payment(), queryset))
+            list(
+                map(lambda borrower: borrower_make_payment(borrower), queryset)
+            )
             updated_count = queryset.count()
 
         msg = "Made loan repayment for {} borrower(s).".format(updated_count)
         self.message_user(request, msg, messages.SUCCESS)
 
     def apply_repayments(self, request, queryset):
+        """Apply repayment for a LoanProfile or several Loan Profiles."""
         if isinstance(queryset, models.LoanProfile):
             obj = queryset
+            borrower_apply_repayments(borrower=obj)
             obj.apply_repayments()
             updated_count = 1
         else:
-            list(map(lambda r: r.apply_repayments(), queryset))
+            list(
+                map(
+                    lambda loan_profile: borrower_apply_repayments(
+                        borrower=loan_profile
+                    ),
+                    queryset,
+                )
+            )
             updated_count = queryset.count()
 
         msg = "Applied repayments from {} loan profile(s).".format(

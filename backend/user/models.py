@@ -26,7 +26,7 @@ class User(AbstractUser, TimeStampedModel):
         decimal_places=2,
         default=Money(0, "USD"),
         default_currency="USD",
-        validators=[MinValueValidator(Money(0.01, "USD"))],
+        validators=[MinValueValidator(Money(0.00, "USD"))],
     )
 
     USERNAME_FIELD = "email"

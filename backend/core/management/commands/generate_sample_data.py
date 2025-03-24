@@ -1,12 +1,13 @@
-from datetime import timedelta
+"""Command: Generate Sample Data."""
 
+from datetime import timedelta
 from core.utils import assign_user_group
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
 from djmoney.money import Money
 from faker import Faker
-from loan import helpers, models
+from loan import models, services
 
 User = get_user_model()
 
@@ -57,7 +58,7 @@ class Command(BaseCommand):
                 )
                 assign_user_group(lender, "lender")
 
-                helpers.make_payment(lender, Money(100, "USD"))
+                services.lender_make_payment(lender, 100)
 
         def create_n_borrowers(n):
             # fake-borrowers & loan-profiles
@@ -93,13 +94,16 @@ class Command(BaseCommand):
             for lender in random_lenders:
                 for loan_profile in random_loan_profiles:
                     for n in range(fake.random_number(digits=1)):
-                        helpers.make_contribution(
-                            lender, loan_profile, Money(get_amount(2), "USD")
+                        services.contribution_create(
+                            lender=lender,
+                            borrower=loan_profile,
+                            amount=Money(get_amount(2), "USD"),
                         )
 
                     loan_profile.get_payment()
-                    helpers.make_repayment(
-                        loan_profile, loan_profile.total_raised()
+                    services.repayment_create(
+                        borrower=loan_profile,
+                        amount=loan_profile.total_raised(),
                     )
                     loan_profile.make_payment()
 
