@@ -1,12 +1,12 @@
 """Loan Views."""
 
-from rest_framework.decorators import action
-from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
-from .permissions import IsOwnerOrReadOnly
 from .models import LoanProfile
+from .permissions import IsOwnerOrReadOnly
 from .serializers import LoanProfileSerializer
 
 

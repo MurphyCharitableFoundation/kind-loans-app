@@ -11,3 +11,9 @@ django-hordak==1.17.0
 django-money==3.5.3
 pillow==11.1.0
 django-phonenumber-field[phonenumbers]==8.0.0
+faker
+ruff
+pre_commit==4.1.0
+typing_extensions==4.12.2
+django-filter==25.1
+flake8

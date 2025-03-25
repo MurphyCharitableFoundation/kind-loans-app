@@ -1,6 +1,0 @@
-flake8
-django_extensions
-faker
-black
-pre-commit
-ruff

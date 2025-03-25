@@ -1,18 +1,15 @@
 """Database models."""
 
-from django.conf import settings
+from core.services import to_money
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from django.db import models, transaction
+from django.db import models
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
-
-
 from model_utils.models import TimeStampedModel
 
-from .helpers import make_repayment
 from .utils import one_year_from_now_date
-from .operations import app_to_borrower, borrower_to_app
 
 User = get_user_model()
 
@@ -24,13 +21,8 @@ class Category(models.Model):
         verbose_name_plural = "Categories"
 
     def __str__(self):
+        """Represent Category as str."""
         return self.name
-
-    @classmethod
-    def create_category(cls, name):
-        """Creates and returns a new category instance."""
-        category, created = cls.objects.get_or_create(name=name)
-        return category
 
 
 class LoanProfileStatus(models.IntegerChoices):
@@ -108,47 +100,8 @@ class LoanProfile(TimeStampedModel):
         verbose_name_plural = "Loan Profiles"
         ordering = ["-created"]
 
-    @classmethod
-    def create_loan_profile(
-        cls,
-        user,
-        title,
-        target_amount,
-        description="",
-        story="",
-        loan_duration=12,
-        deadline_to_receive_loan=None,
-        category_names=None,
-        **extra_fields,
-    ):
-        """Create a new LoanProfile instance and assigns categories."""
-
-        if not isinstance(target_amount, Money):
-            target_amount = Money(
-                target_amount, settings.DEFAULT_MONEY_CURRENCY
-            )
-
-        loan_profile = cls.objects.create(
-            user=user,
-            title=title,
-            target_amount=target_amount,
-            description=description,
-            story=story,
-            loan_duration=loan_duration,
-            deadline_to_receive_loan=deadline_to_receive_loan
-            or one_year_from_now_date(),
-            **extra_fields,
-        )
-
-        # Add categories (creating if necessary)
-        if category_names:
-            for name in category_names:
-                category = Category.create_category(name)
-                loan_profile.categories.add(category)
-
-        return loan_profile
-
     def __str__(self):
+        """Represent Loan Profile as str."""
         return f"Loan Profile: {self.title} by {self.user.get_full_name()}"
 
     def total_raised(self):
@@ -176,34 +129,9 @@ class LoanProfile(TimeStampedModel):
         """If all repayments are applied, then True."""
         return all(r.is_applied for r in self.repayments.all())
 
-    def get_payment(self):
-        """REAL-MONEY: Get payment from app."""
-        self.is_paid_raised_amount = True
-        self.save()
-
-        return app_to_borrower(self, self.total_raised())
-
-    def make_payment(self):
-        """REAL-MONEY: Make payment to app."""
-        self.has_repaid = True
-        self.save()
-
-        return borrower_to_app(
-            self, self.total_repaid(), self.remaining_balance()
-        )
-
-    def make_repayment(self, amount):
-        """Make repayment."""
-        return make_repayment(self, amount)
-
-    def apply_repayments(self):
-        """Apply all repayments to contributors proportionally."""
-        repayments = self.repayments.all()
-        return list(map(lambda r: r.repay_lenders(), repayments))
-
 
 class Contribution(TimeStampedModel):
-    """Represents a financial contribution from a lender to a borrower."""
+    """Represent a financial contribution from a lender to a borrower."""
 
     lender = models.ForeignKey(
         User,
@@ -224,8 +152,31 @@ class Contribution(TimeStampedModel):
         validators=[MinValueValidator(Money(0.01, "USD"))],
     )
 
+    def clean(self):
+        """Validate Contribution before save."""
+        max_contribution = self.lender.amount_available
+        if self.amount > max_contribution:
+            raise ValidationError(
+                {"amount": f"Amount <= lender's funds: {max_contribution}."}
+            )
+
+        if self.amount <= to_money(0):
+            raise ValidationError(
+                {"amount": "Amount cannot be negative or zero."}
+            )
+
+        total_raised = self.borrower.total_raised()
+        rfn = self.borrower.target_amount - total_raised
+        if self.amount > rfn:
+            raise ValidationError(
+                {"amount": f"Amount <= remaining funding need {rfn}"}
+            )
+
     def __str__(self):
-        return f"{self.lender} contributed {self.amount} to {self.borrower}"
+        """Represent Contribution as str."""
+        return "Contribution: {} contributed {} to {}".format(
+            self.lender, self.amount, self.borrower
+        )
 
     class Meta:
         ordering = ["-created"]
@@ -233,7 +184,7 @@ class Contribution(TimeStampedModel):
 
 class Repayment(TimeStampedModel):
     """
-    Represents a repayment made by a borrower.
+    Represent a repayment made by a borrower.
 
     Each borrower can make multiple repayments.
     """
@@ -258,31 +209,24 @@ class Repayment(TimeStampedModel):
         help_text="True if the repayment has been paid out to contributors.",
     )
 
-    def repay_lenders(self):
-        """Repay lenders from this amount."""
+    def clean(self):
+        """Validate Repayment before saving."""
+        rb = self.borrower.remaining_balance()
+        if self.amount > rb:
+            raise ValidationError(
+                {"amount": f"Amount <= loan profile remaining balance {rb}"}
+            )
 
-        def repay_lender(contribution):
-            def cut():
-                return Money(
-                    self.amount.amount
-                    * contribution.amount.amount
-                    / self.borrower.total_raised().amount,
-                    "USD",
-                )
-
-            contribution.lender.amount_available += cut()
-            contribution.lender.save()
-
-        if not self.is_applied:
-            with transaction.atomic():
-                for contribution in self.borrower.contributions.all():
-                    repay_lender(contribution)
-
-                self.is_applied = True
-                self.save()
+        if self.amount <= to_money(0):
+            raise ValidationError(
+                {"amount": "Amount cannot be negative or zero."}
+            )
 
     def __str__(self):
-        return f"{self.borrower} repaid {self.amount} on {self.created}"
+        """Represent Repayment as str."""
+        return "Repayment: {} repaid {} on {}".format(
+            self.borrower, self.amount, self.created
+        )
 
     class Meta:
         ordering = ["-created"]

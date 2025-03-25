@@ -1,7 +1,10 @@
+"""Loan serializers."""
+
 from djmoney.contrib.django_rest_framework.fields import MoneyField
 from rest_framework import serializers
 
 from .models import Category, LoanProfile
+from .services import category_create, loan_profile_create
 
 
 class LoanProfileSerializer(serializers.ModelSerializer):
@@ -56,11 +59,11 @@ class LoanProfileSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Handle category creation properly during LoanProfile creation."""
         categories_data = validated_data.pop("categories", [])
-        loan_profile = LoanProfile.objects.create(**validated_data)
+        loan_profile = loan_profile_create(**validated_data)
 
         # Add categories if provided
         for category in categories_data:
-            category = Category.create_category(name=category)
+            category = category_create(name=category)
             loan_profile.categories.add(category)
 
         return loan_profile

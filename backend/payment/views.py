@@ -4,10 +4,12 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from djmoney.money import Money
-from loan.helpers import make_payment, make_payout
-from payment.services import (create_paypal_transaction,
-                              execute_paypal_payout_transaction,
-                              execute_paypal_transaction)
+from loan.services import lender_make_payment, lender_receive_payment
+from payment.services import (
+    create_paypal_transaction,
+    execute_paypal_payout_transaction,
+    execute_paypal_transaction,
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -46,7 +48,9 @@ class ExecutePayPalPaymentView(APIView):
         payer_id = request.GET.get("PayerID")
 
         try:
-            execute_paypal_transaction(payment_id, payer_id, make_payment)
+            execute_paypal_transaction(
+                payment_id, payer_id, lender_make_payment
+            )
 
             return Response(
                 {"message": "Payment completed successfully"}, status=200
@@ -72,7 +76,9 @@ class ExecutePayPalPayoutView(APIView):
             # payee = request.user
             payee = get_object_or_404(User, pk=payee_id)
 
-            execute_paypal_payout_transaction(payee, amount, make_payout)
+            execute_paypal_payout_transaction(
+                payee, amount, lender_receive_payment
+            )
             return Response({"message": "Payout executed."}, status=200)
 
         except Exception as e:

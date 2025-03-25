@@ -2,9 +2,9 @@
 
 from django.test import TestCase
 from djmoney.money import Money
-from loan.helpers import (create_user_with_group, make_contribution,
-                          make_repayment)
-from loan.models import LoanProfile
+
+from ..services import (contribution_create, loan_profile_create,
+                        repayment_create, user_create)
 
 
 class RepaymentModelTests(TestCase):
@@ -13,41 +13,46 @@ class RepaymentModelTests(TestCase):
     def setUp(self):
         password = "testpass123"
 
-        self.borrower_user = create_user_with_group(
+        self.borrower_user = user_create(
             email="borrower@example.com",
             password=password,
             group_name="borrower",
         )
-        self.borrower_target_100_repaid_50 = LoanProfile.objects.create(
+        self.borrower_target_100_repaid_50 = loan_profile_create(
             user=self.borrower_user,
-            profile_img="www.example.com/photo.jpg",
+            profile_img="https://www.example.com/photo.jpg",
+            title="loan profile 1",
             description="loan profile 1",
             loan_duration=12,
-            target_amount=Money(100, "USD"),
+            target_amount=100,
             deadline_to_receive_loan="2021-12-31",
             status=1,
         )
 
-        self.lender_a = create_user_with_group(
+        self.lender_a = user_create(
             email="lenderA@example.com",
             password=password,
             group_name="lender",
-            amount_available=Money(50, "USD"),
+            amount_available=50,
         )
 
-        self.lender_b = create_user_with_group(
+        self.lender_b = user_create(
             email="lenderB@example.com",
             password=password,
             group_name="lender",
-            amount_available=Money(50, "USD"),
+            amount_available=50,
         )
 
-        self.contribution_a = make_contribution(
-            self.lender_a, self.borrower_target_100_repaid_50, Money(50, "USD")
+        self.contribution_a = contribution_create(
+            lender=self.lender_a,
+            borrower=self.borrower_target_100_repaid_50,
+            amount=50,
         )
 
-        self.contribution_b = make_contribution(
-            self.lender_b, self.borrower_target_100_repaid_50, Money(50, "USD")
+        self.contribution_b = contribution_create(
+            lender=self.lender_b,
+            borrower=self.borrower_target_100_repaid_50,
+            amount=50,
         )
 
     def test_borrower_can_make_single_repayment(self):
@@ -55,8 +60,9 @@ class RepaymentModelTests(TestCase):
         Test that a lender can contribute to loan_profile
         """
         repayment_amount = Money(50, "USD")
-        repayment = make_repayment(
-            self.borrower_target_100_repaid_50, repayment_amount
+        repayment = repayment_create(
+            borrower=self.borrower_target_100_repaid_50,
+            amount=repayment_amount,
         )
 
         self.assertEqual(
@@ -73,11 +79,13 @@ class RepaymentModelTests(TestCase):
         """
         repayment_amount_a = Money(20, "USD")
         repayment_amount_b = Money(30, "USD")
-        repayment_a = make_repayment(
-            self.borrower_target_100_repaid_50, repayment_amount_a
+        repayment_a = repayment_create(
+            borrower=self.borrower_target_100_repaid_50,
+            amount=repayment_amount_a,
         )
-        repayment_b = make_repayment(
-            self.borrower_target_100_repaid_50, repayment_amount_b
+        repayment_b = repayment_create(
+            borrower=self.borrower_target_100_repaid_50,
+            amount=repayment_amount_b,
         )
 
         self.assertEqual(
