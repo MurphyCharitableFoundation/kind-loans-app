@@ -1,3 +1,5 @@
+"""User models."""
+
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -12,6 +14,8 @@ from .managers import UserManager
 
 
 class User(AbstractUser, TimeStampedModel):
+    """Representation of User."""
+
     username = None
     email = models.EmailField(_("email address"), unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -54,6 +58,7 @@ class User(AbstractUser, TimeStampedModel):
         return app_to_lender(self, amount)
 
     def __str__(self):
+        """Represent User as str."""
         return f"User: {self.email}"
 
     class Meta:
