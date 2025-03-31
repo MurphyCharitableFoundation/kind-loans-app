@@ -1,0 +1,92 @@
+[
+    {
+        "model": "loan.category",
+        "pk": 1,
+        "fields": {
+            "name": "Business"
+        }
+    },
+    {
+        "model": "loan.category",
+        "pk": 2,
+        "fields": {
+            "name": "Retail"
+        }
+    },
+    {
+        "model": "loan.category",
+        "pk": 3,
+        "fields": {
+            "name": "Agriculture"
+        }
+    },
+    {
+        "model": "loan.loanprofile",
+        "pk": 1,
+        "fields": {
+            "created": "2025-03-31T02:52:48.789Z",
+            "modified": "2025-03-31T02:52:48.789Z",
+            "user": 5,
+            "profile_img": "",
+            "title": "Sewing Business",
+            "description": "Need a sewing machine and fabric to grow my tailoring shop.",
+            "story": "",
+            "loan_duration": 12,
+            "target_amount_currency": "USD",
+            "target_amount": "300.00",
+            "is_paid_raised_amount": false,
+            "has_repaid": false,
+            "deadline_to_receive_loan": "2025-03-31",
+            "status": 1,
+            "country": "Nigeria",
+            "city": "Lagos",
+            "categories": [1]
+        }
+    },
+    {
+        "model": "loan.loanprofile",
+        "pk": 2,
+        "fields": {
+            "created": "2025-03-31T02:52:48.789Z",
+            "modified": "2025-03-31T02:52:48.789Z",
+            "user": 6,
+            "profile_img": "",
+            "title": "Grocery Expansion",
+            "description": "Expanding the local grocery store to serve more customers.",
+            "story": "",
+            "loan_duration": 12,
+            "target_amount_currency": "USD",
+            "target_amount": "500.00",
+            "is_paid_raised_amount": false,
+            "has_repaid": false,
+            "deadline_to_receive_loan": "2025-03-31",
+            "status": 1,
+            "country": "Uganda",
+            "city": "Kampala",
+            "categories": [2]
+        }
+    },
+    {
+        "model": "loan.loanprofile",
+        "pk": 3,
+        "fields": {
+            "created": "2025-03-31T02:52:48.789Z",
+            "modified": "2025-03-31T02:52:48.789Z",
+            "user": 7,
+            "profile_img": "",
+            "title": "Farm Irrigation",
+            "description": "Buying irrigation equipment to improve farm productivity.",
+            "story": "",
+            "loan_duration": 12,
+            "target_amount_currency": "USD",
+            "target_amount": "800.00",
+            "is_paid_raised_amount": false,
+            "has_repaid": false,
+            "deadline_to_receive_loan": "2025-03-31",
+            "status": 1,
+            "country": "Kenya",
+            "city": "Nairobi",
+            "categories": [3]
+        }
+    }
+]

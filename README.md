@@ -21,12 +21,20 @@
 1. Run `docker compose run --rm backend sh -c "python manage.py
    createsuperuser"` to create a superuser
 1. Run `docker compose run --rm backend sh -c "python manage.py
-   create_groups"` to generate the following groups: admin, lender,
-   borrower
-1. Run `docker compose run --rm backend sh -c "python manage.py
-   generate_sample_data 2 6"` to generate sample data
-1. Run `docker compose run --rm backend sh -c "python manage.py
    create_tags"` to create tags for loan profiles
+   
+### Loading Database Fixtures (i.e. sample data)
+
+1. Load sample data in order:
+   
+   (i.e loads groups: admin, volunteer, lender, borrower; users; loan_profiles: for borrower-users)
+   
+   ```
+
+   docker compose run --rm backend sh -c "python manage.py loaddata users.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata loan_profiles.json"
+
+   ```
 
 ### Notes on separation of models into apps
 
