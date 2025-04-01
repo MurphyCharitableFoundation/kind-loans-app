@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 
 from core.services import Amount
 from ..selectors import payment_get
-from .entry import external_payment_create, external_payment_capture
+from .common import external_payment_create, external_payment_capture
 
 
 User = get_user_model()

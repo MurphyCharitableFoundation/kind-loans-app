@@ -1,4 +1,4 @@
-"""Payment Entry services."""
+"""Common services."""
 
 from django.contrib.auth import get_user_model
 from django.db import transaction

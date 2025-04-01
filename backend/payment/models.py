@@ -2,6 +2,9 @@
 
 from django.conf import settings
 from django.db import models
+from django.core.validators import MinValueValidator
+
+from djmoney.money import Money
 from djmoney.models.fields import MoneyField
 from hordak.models import Transaction
 from model_utils.models import TimeStampedModel
@@ -70,6 +73,7 @@ class Payment(TimeStampedModel):
         max_digits=14,
         decimal_places=2,
         default_currency="USD",
+        validators=[MinValueValidator(Money(0.01, "USD"))],
     )
     status = models.CharField(
         max_length=20,
@@ -84,14 +88,7 @@ class Payment(TimeStampedModel):
         ordering = ["-created"]
 
     def __str__(self):
+        """Represent Payment as str."""
         return "Payment: {} payment by {} - {}".format(
             self.platform, self.user, self.gateway_payment_id
         )
-
-    def mark_as_completed(self):
-        self.status = PaymentStatus.COMPLETED
-        self.save()
-
-    def mark_as_failed(self):
-        self.status = PaymentStatus.FAILED
-        self.save()
