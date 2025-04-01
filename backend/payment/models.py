@@ -7,7 +7,7 @@ from hordak.models import Transaction
 from model_utils.models import TimeStampedModel
 
 
-class TransactionStatus(models.TextChoices):
+class PaymentStatus(models.TextChoices):
     """Transaction Status choices."""
 
     PENDING = "PENDING", "Pending"  # Payment initiated but not yet processed
@@ -73,8 +73,8 @@ class Payment(TimeStampedModel):
     )
     status = models.CharField(
         max_length=20,
-        choices=TransactionStatus.choices,
-        default=TransactionStatus.PENDING,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.PENDING,
         help_text="The status of the payment.",
     )
 
@@ -89,9 +89,9 @@ class Payment(TimeStampedModel):
         )
 
     def mark_as_completed(self):
-        self.status = TransactionStatus.COMPLETED
+        self.status = PaymentStatus.COMPLETED
         self.save()
 
     def mark_as_failed(self):
-        self.status = TransactionStatus.FAILED
+        self.status = PaymentStatus.FAILED
         self.save()

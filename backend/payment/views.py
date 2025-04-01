@@ -3,83 +3,89 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from djmoney.money import Money
-from loan.services import lender_make_payment, lender_receive_payment
-from payment.services import (
-    create_paypal_transaction,
-    execute_paypal_payout_transaction,
-    execute_paypal_transaction,
-)
+
+from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from loan.services import lender_make_payment, lender_receive_payment
+from .models import Payment
+from .services import (
+    paypal_payment_create,
+    paypal_payment_capture,
+    paypal_payout_create,
+)
+
 
 User = get_user_model()
 
 
 class CreatePayPalPaymentView(APIView):
+    """Create PayPal Payment View."""
+
     def post(self, request):
-        amount_value = request.data.get("amount")
+        """Create PayPal Payment."""
+        amount = request.data.get("amount")
         currency = request.data.get("currency", "USD")
         payer_id = request.data.get("payer_id")
-        return_url = request.build_absolute_uri(reverse("execute-payment"))
+        return_url = request.build_absolute_uri(reverse("paypal-capture"))
         cancel_url = request.build_absolute_uri(reverse("cancel-payment"))
 
-        amount = Money(amount_value, currency)
+        if not amount:
+            return Response({"amount": "Amount is required."}, status=400)
 
+        payer = get_object_or_404(User, pk=payer_id)
+
+        paypal_payment_data = paypal_payment_create(
+            payer=payer,
+            amount=amount,
+            currency=currency,
+            return_url=return_url,
+            cancel_url=cancel_url,
+        )
+
+        return Response(paypal_payment_data, status=201)
+
+
+class CapturePayPalPaymentView(APIView):
+    """Execute PayPal Payment View."""
+
+    def get(self, request, payment_id):
+        """Capture PayPal Payment."""
         try:
-            payer = get_object_or_404(User, pk=payer_id)
-
-            payment, transaction = create_paypal_transaction(
-                payer, amount, return_url, cancel_url
+            paypal_payment_capture_data = paypal_payment_capture(
+                payment_id=payment_id,
+                capture_payment_func=lender_make_payment,
             )
-            # Return the PayPal approval URL to the frontend
-            for link in payment.links:
-                if link.rel == "approval_url":
-                    approval_url = link.href
-                    return Response({"approval_url": approval_url}, status=201)
-
+            return Response(paypal_payment_capture_data)
+        except Payment.DoesNotExist:
+            return Response({"error": "Payment not found."}, status=404)
         except Exception as e:
             return Response({"error": str(e)}, status=400)
 
 
-class ExecutePayPalPaymentView(APIView):
-    def get(self, request):
-        payment_id = request.GET.get("paymentId")
-        payer_id = request.GET.get("PayerID")
+class CapturePayPalPayoutView(APIView):
+    """Capture PayPal Payout View."""
 
-        try:
-            execute_paypal_transaction(
-                payment_id, payer_id, lender_make_payment
-            )
+    permission_classes = [permissions.IsAuthenticated]
 
-            return Response(
-                {"message": "Payment completed successfully"}, status=200
-            )
-        except Exception as e:
-            return Response({"error": str(e)}, status=400)
-
-
-class CancelPaymentView(APIView):
-    def get(self, request):
-        return Response({"message": "Payment was canceled."}, status=200)
-
-
-class ExecutePayPalPayoutView(APIView):
     def post(self, request):
-        payee_id = request.data.get("payee_id")
-        amount_value = request.data.get("amount")
-        currency = request.data.get("currency", "USD")
+        """Capture PayPal Payout."""
+        user = request.user
+        amount = request.data.get("amount")
 
-        amount = Money(amount_value, currency)
+        if not amount:
+            return Response({"amount": "Amount is required."}, status=400)
 
         try:
-            # payee = request.user
-            payee = get_object_or_404(User, pk=payee_id)
-
-            execute_paypal_payout_transaction(
-                payee, amount, lender_receive_payment
+            payout_data = paypal_payout_create(
+                user=user,
+                amount=amount,
+                capture_payout_func=lender_receive_payment,
+                note=f"Withdrawal by {user.email}",
             )
-            return Response({"message": "Payout executed."}, status=200)
+
+            return Response(payout_data, status=200)
 
         except Exception as e:
             return Response({"error": str(e)}, status=400)

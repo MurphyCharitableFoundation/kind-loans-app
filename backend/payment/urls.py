@@ -2,28 +2,28 @@
 
 from django.urls import path
 
-from .views import (CancelPaymentView, CreatePayPalPaymentView,
-                    ExecutePayPalPaymentView, ExecutePayPalPayoutView)
+from .views import (
+    CreatePayPalPaymentView,
+    CapturePayPalPaymentView,
+    CapturePayPalPayoutView,
+)
 
 urlpatterns = [
     # create a payment and redirect the user to PayPal for approval
     path(
-        "create-paypal-payment/",
+        "paypal/create/",
         CreatePayPalPaymentView.as_view(),
-        name="create-paypal-payment",
+        name="paypal-create",
     ),
     # finalize the payment after approval from PayPal
     path(
-        "execute-paypal-payment/",
-        ExecutePayPalPaymentView.as_view(),
-        name="execute-payment",
+        "paypal/capture/<str:payment_id>/",
+        CapturePayPalPaymentView.as_view(),
+        name="paypal-capture",
     ),
     path(
-        "cancel-payment/", CancelPaymentView.as_view(), name="cancel-payment"
-    ),
-    path(
-        "execute-paypal-payout/",
-        ExecutePayPalPayoutView.as_view(),
-        name="execute-payout",
+        "paypal/payout/",
+        CapturePayPalPayoutView.as_view(),
+        name="paypal-payout",
     ),
 ]

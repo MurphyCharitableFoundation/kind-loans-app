@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Payment, TransactionStatus
+from .models import Payment, PaymentStatus
 
 
 @admin.register(Payment)
@@ -48,8 +48,8 @@ class PaymentAdmin(admin.ModelAdmin):
 
     @admin.action(description="Mark selected payments as Completed")
     def mark_as_completed(self, request, queryset):
-        queryset.update(status=TransactionStatus.COMPLETED)
+        queryset.update(status=PaymentStatus.COMPLETED)
 
     @admin.action(description="Mark selected payments as Failed")
     def mark_as_failed(self, request, queryset):
-        queryset.update(status=TransactionStatus.FAILED)
+        queryset.update(status=PaymentStatus.FAILED)
