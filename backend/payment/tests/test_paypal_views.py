@@ -59,18 +59,29 @@ class PayPalViewsTests(TestCase):
                 payment_id="ORDER123", capture_payment_func=fake_capture
             )
 
-    @patch("payment.views.paypal_payout_create")
-    def test_capture_paypal_payout_view(self, mock_payout_create):
-        mock_payout_create.return_value = {
-            "batch_header": {"payout_batch_id": "XYZ"}
-        }
+        @patch("payment.views.paypal_payout_create")
+        def test_capture_paypal_payout_view(self, mock_payout_create):
+            mock_payout_create.return_value = {
+                "batch_header": {"payout_batch_id": "XYZ"}
+            }
 
-        url = reverse("paypal-payout")
-        data = {"amount": "15.00"}
+            url = reverse("paypal-payout")
+            data = {
+                "amount": "15.00",
+                "payee_id": self.user.id,
+            }
 
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json()["batch_header"]["payout_batch_id"], "XYZ"
-        )
-        mock_payout_create.assert_called_once()
+            def fake_capture(user, amount):
+                return "ok"
+
+            response = self.client.post(url, data)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.json()["batch_header"]["payout_batch_id"], "XYZ"
+            )
+            mock_payout_create.assert_called_once_with(
+                user=self.user,
+                amount="15.00",
+                capture_payout_func=fake_capture,
+                note=f"Withdrawal by {self.user.email}",
+            )

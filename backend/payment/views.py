@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
-from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -86,22 +85,23 @@ class CancelPayPalPaymentView(APIView):
 class CapturePayPalPayoutView(APIView):
     """Capture PayPal Payout View."""
 
-    permission_classes = [permissions.IsAuthenticated]
-
     def post(self, request):
         """Capture PayPal Payout."""
-        user = request.user
+        # user = request.user
+        payee_id = request.data.get("payee_id")
         amount = request.data.get("amount")
 
         if not amount:
             return Response({"amount": "Amount is required."}, status=400)
 
+        payee = get_object_or_404(User, pk=payee_id)
+
         try:
             payout_data = paypal_payout_create(
-                user=user,
+                user=payee,
                 amount=amount,
                 capture_payout_func=lender_receive_payment,
-                note=f"Withdrawal by {user.email}",
+                note=f"Withdrawal by {payee.email}",
             )
 
             return Response(payout_data, status=200)

@@ -104,4 +104,6 @@ def borrower_apply_repayments(*, borrower: LoanProfile) -> None:
     from .repayment import repayment_apply
 
     repayments = borrower.repayments.all()
-    return list(map(lambda repayment: repayment_apply(repayment), repayments))
+    return list(
+        map(lambda repayment: repayment_apply(repayment=repayment), repayments)
+    )

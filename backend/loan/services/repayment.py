@@ -41,11 +41,13 @@ def repayment_create(
 @transaction.atomic
 def repayment_apply(*, repayment: Repayment) -> None:
     """Apply Repayment to lenders based on their contributions."""
+    from .contribution import Contribution
 
     if not repayment.is_applied:
 
-        def repay_lender_by_contribution(contribution) -> None:
+        def repay_lender_by_contribution(contribution: Contribution) -> None:
             def cut():
+                """BUG: off by 1 cent in some cases."""
                 return to_money(
                     repayment.amount.amount
                     * contribution.amount.amount

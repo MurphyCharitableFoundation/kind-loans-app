@@ -170,6 +170,7 @@ def _payout_create(
     sender_item_id: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Send money to user's PayPal email using PayPal Payouts API."""
+    # https://developer.paypal.com/docs/api/payments.payouts-batch/v1/#payouts_post
     access_token = _get_access_token()
 
     payload = {

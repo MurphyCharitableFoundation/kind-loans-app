@@ -1,0 +1,304 @@
+[
+{
+  "model": "loan.category",
+  "pk": 1,
+  "fields": {
+    "name": "Business"
+  }
+},
+{
+  "model": "loan.category",
+  "pk": 2,
+  "fields": {
+    "name": "Retail"
+  }
+},
+{
+  "model": "loan.category",
+  "pk": 3,
+  "fields": {
+    "name": "Agriculture"
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 1,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-04-02T04:10:47.476Z",
+    "user": 5,
+    "profile_img": "",
+    "title": "Sewing Business",
+    "description": "Need a sewing machine and fabric to grow my tailoring shop.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "300.00",
+    "is_paid_raised_amount": true,
+    "has_repaid": false,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Nigeria",
+    "city": "Lagos",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 2,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-03-31T02:52:48.789Z",
+    "user": 6,
+    "profile_img": "",
+    "title": "Grocery Expansion",
+    "description": "Expanding the local grocery store to serve more customers.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "500.00",
+    "is_paid_raised_amount": false,
+    "has_repaid": false,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Uganda",
+    "city": "Kampala",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 3,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-03-31T02:52:48.789Z",
+    "user": 7,
+    "profile_img": "",
+    "title": "Farm Irrigation",
+    "description": "Buying irrigation equipment to improve farm productivity.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "800.00",
+    "is_paid_raised_amount": false,
+    "has_repaid": false,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Kenya",
+    "city": "Nairobi",
+    "categories": [
+      3
+    ]
+  }
+},
+{
+  "model": "loan.contribution",
+  "pk": 1,
+  "fields": {
+    "created": "2025-04-02T04:04:28.337Z",
+    "modified": "2025-04-02T04:04:28.337Z",
+    "lender": 3,
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "100.00"
+  }
+},
+{
+  "model": "loan.contribution",
+  "pk": 2,
+  "fields": {
+    "created": "2025-04-02T04:05:01.926Z",
+    "modified": "2025-04-02T04:05:01.926Z",
+    "lender": 4,
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "200.00"
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 1,
+  "fields": {
+    "uuid": "2uTJwEZ2QVWGka1tpkkjgQ",
+    "name": "platform_cash_account",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "AS",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 2,
+  "fields": {
+    "uuid": "omwS4xkLQ6GgToEW2JTQow",
+    "name": "platform_bad_debt",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "EX",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 2,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 3,
+  "fields": {
+    "uuid": "3qDgLwv2StaNOqEsdmg_Lg",
+    "name": "platform_account_payables",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "LI",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 3,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 4,
+  "fields": {
+    "uuid": "5gClBUPhTluwKZT_O9bxyA",
+    "name": "platform_account_receivables",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "AS",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 4,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.transaction",
+  "pk": 1,
+  "fields": {
+    "uuid": "96J3joiHSMG3dKcAd7CQbQ",
+    "timestamp": "2025-04-02T01:17:01.576Z",
+    "date": "2025-04-02",
+    "description": "User User: l_luke@example.com added funds to their account"
+  }
+},
+{
+  "model": "hordak.transaction",
+  "pk": 2,
+  "fields": {
+    "uuid": "oFt6wT7uSn2Q3WJl6LgFFw",
+    "timestamp": "2025-04-02T03:43:42.361Z",
+    "date": "2025-04-02",
+    "description": "User User: l_lana@example.com added funds to their account"
+  }
+},
+{
+  "model": "hordak.transaction",
+  "pk": 3,
+  "fields": {
+    "uuid": "szIRNGQCSH-jC3eleFppGQ",
+    "timestamp": "2025-04-02T04:10:47.486Z",
+    "date": "2025-04-02",
+    "description": "Disbursed funds to Loan Profile: Sewing Business by Bob Borrower"
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 1,
+  "fields": {
+    "uuid": "4Gm3XQaLRcGGRLx9c7SiUA",
+    "transaction": 1,
+    "account": 3,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 2,
+  "fields": {
+    "uuid": "lpGwMqTOQ-e2lj7ogcITIg",
+    "transaction": 1,
+    "account": 1,
+    "amount_currency": "USD",
+    "amount": "-100.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 3,
+  "fields": {
+    "uuid": "yLzA8XHxToaxtTlykwyA-A",
+    "transaction": 2,
+    "account": 3,
+    "amount_currency": "USD",
+    "amount": "200.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 4,
+  "fields": {
+    "uuid": "18McDLJFTHCaX6SxCDUv7w",
+    "transaction": 2,
+    "account": 1,
+    "amount_currency": "USD",
+    "amount": "-200.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 5,
+  "fields": {
+    "uuid": "oCSaKQ8nRZOMZ8VuXutuUw",
+    "transaction": 3,
+    "account": 1,
+    "amount_currency": "USD",
+    "amount": "300.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 6,
+  "fields": {
+    "uuid": "ZTDDGS08T1mhTTAZobb-Tg",
+    "transaction": 3,
+    "account": 4,
+    "amount_currency": "USD",
+    "amount": "-300.00",
+    "description": ""
+  }
+}
+]
