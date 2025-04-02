@@ -5,6 +5,7 @@ from django.urls import path
 from .views import (
     CreatePayPalPaymentView,
     CapturePayPalPaymentView,
+    CancelPayPalPaymentView,
     CapturePayPalPayoutView,
 )
 
@@ -17,9 +18,14 @@ urlpatterns = [
     ),
     # finalize the payment after approval from PayPal
     path(
-        "paypal/capture/<str:payment_id>/",
+        "paypal/capture/",
         CapturePayPalPaymentView.as_view(),
         name="paypal-capture",
+    ),
+    path(
+        "paypal/cancel/",
+        CancelPayPalPaymentView.as_view(),
+        name="cancel-payment",
     ),
     path(
         "paypal/payout/",

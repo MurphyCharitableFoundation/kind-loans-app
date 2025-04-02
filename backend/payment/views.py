@@ -13,6 +13,7 @@ from .models import Payment
 from .services import (
     paypal_payment_create,
     paypal_payment_capture,
+    paypal_payment_cancel,
     paypal_payout_create,
 )
 
@@ -35,7 +36,6 @@ class CreatePayPalPaymentView(APIView):
             return Response({"amount": "Amount is required."}, status=400)
 
         payer = get_object_or_404(User, pk=payer_id)
-
         paypal_payment_data = paypal_payment_create(
             payer=payer,
             amount=amount,
@@ -50,14 +50,33 @@ class CreatePayPalPaymentView(APIView):
 class CapturePayPalPaymentView(APIView):
     """Execute PayPal Payment View."""
 
-    def get(self, request, payment_id):
+    def get(self, request):
         """Capture PayPal Payment."""
         try:
+            payment_id = request.GET.get("token")
             paypal_payment_capture_data = paypal_payment_capture(
                 payment_id=payment_id,
                 capture_payment_func=lender_make_payment,
             )
             return Response(paypal_payment_capture_data)
+        except Payment.DoesNotExist:
+            return Response({"error": "Payment not found."}, status=404)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
+
+
+class CancelPayPalPaymentView(APIView):
+    """Cancel PayPal Payment View."""
+
+    def get(self, request):
+        """Cencel PayPal Payment."""
+        try:
+            payment_id = request.GET.get("paymentId")
+            paypal_payment_cancel(payment_id=payment_id)
+            return Response(
+                {"message": "Payment canceled."},
+                status=200,
+            )
         except Payment.DoesNotExist:
             return Response({"error": "Payment not found."}, status=404)
         except Exception as e:

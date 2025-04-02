@@ -49,9 +49,8 @@ class PayPalViewsTests(TestCase):
         def fake_capture(user, amount):
             return "ok"
 
-        # Patch the function used in the view to avoid mismatch
         with patch("payment.views.lender_make_payment", new=fake_capture):
-            url = reverse("paypal-capture", args=["ORDER123"])
+            url = reverse("paypal-capture") + "?token=ORDER123"
             response = self.client.get(url)
 
             self.assertEqual(response.status_code, 200)

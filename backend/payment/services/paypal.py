@@ -8,6 +8,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 
 from core.services import Amount
+from ..models import PaymentStatus
 from ..selectors import payment_get
 from .common import external_payment_create, external_payment_capture
 
@@ -60,6 +61,14 @@ def paypal_payment_capture(
     return payment_response
 
 
+def paypal_payment_cancel(payment_id: str) -> None:
+    """Mark a PayPal payment as canceled."""
+    payment = payment_get(gateway_payment_id=payment_id)
+    payment.status = PaymentStatus.CANCELED
+    payment.full_clean()
+    payment.save()
+
+
 def paypal_payout_create(
     *,
     user: User,
@@ -92,6 +101,7 @@ def _get_access_token() -> str:
         ),
         data={"grant_type": "client_credentials"},
     )
+
     response.raise_for_status()
     return response.json().get("access_token", "")
 
@@ -107,14 +117,23 @@ def _payment_create(
     access_token = _get_access_token()
     payload: Dict[str, Any] = {
         "intent": "CAPTURE",
+        "payment_source": {
+            "paypal": {
+                "experience_context": {
+                    "payment_method_preference": "IMMEDIATE_PAYMENT_REQUIRED",
+                    "landing_page": "LOGIN",
+                    "shipping_preference": "GET_FROM_FILE",
+                    "user_action": "PAY_NOW",
+                    "return_url": return_url or "",
+                    "cancel_url": cancel_url or "",
+                }
+            }
+        },
         "purchase_units": [
             {"amount": {"currency_code": currency, "value": amount}}
         ],
-        "application_context": {
-            "return_url": return_url or "",
-            "cancel_url": cancel_url or "",
-        },
     }
+
     response = requests.post(
         f"{PAYPAL_BASE_URL}/v2/checkout/orders",
         headers={

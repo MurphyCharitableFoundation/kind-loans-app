@@ -12,13 +12,13 @@ from .models import Payment
 def payment_get(
     *,
     payment_id: Optional[int] = None,
-    payment_gateway_id: Optional[str] = None,
+    gateway_payment_id: Optional[str] = None,
 ) -> Optional[Payment]:
     """Retrieve Payment."""
     if payment_id:
         return get_object(Payment, id=payment_id)
-    elif payment_gateway_id:
-        return get_object(Payment, payment_gateway_id=payment_gateway_id)
+    elif gateway_payment_id:
+        return get_object(Payment, gateway_payment_id=gateway_payment_id)
 
     return None
 
