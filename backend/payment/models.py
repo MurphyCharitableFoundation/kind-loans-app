@@ -2,12 +2,15 @@
 
 from django.conf import settings
 from django.db import models
+from django.core.validators import MinValueValidator
+
+from djmoney.money import Money
 from djmoney.models.fields import MoneyField
 from hordak.models import Transaction
 from model_utils.models import TimeStampedModel
 
 
-class TransactionStatus(models.TextChoices):
+class PaymentStatus(models.TextChoices):
     """Transaction Status choices."""
 
     PENDING = "PENDING", "Pending"  # Payment initiated but not yet processed
@@ -70,11 +73,12 @@ class Payment(TimeStampedModel):
         max_digits=14,
         decimal_places=2,
         default_currency="USD",
+        validators=[MinValueValidator(Money(0.01, "USD"))],
     )
     status = models.CharField(
         max_length=20,
-        choices=TransactionStatus.choices,
-        default=TransactionStatus.PENDING,
+        choices=PaymentStatus.choices,
+        default=PaymentStatus.PENDING,
         help_text="The status of the payment.",
     )
 
@@ -84,14 +88,7 @@ class Payment(TimeStampedModel):
         ordering = ["-created"]
 
     def __str__(self):
+        """Represent Payment as str."""
         return "Payment: {} payment by {} - {}".format(
             self.platform, self.user, self.gateway_payment_id
         )
-
-    def mark_as_completed(self):
-        self.status = TransactionStatus.COMPLETED
-        self.save()
-
-    def mark_as_failed(self):
-        self.status = TransactionStatus.FAILED
-        self.save()

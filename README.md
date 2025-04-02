@@ -25,14 +25,30 @@
    
 ### Loading Database Fixtures (i.e. sample data)
 
-1. Load sample data in order:
-   
-   (i.e loads groups: admin, volunteer, lender, borrower; users; loan_profiles: for borrower-users)
+1. Auto: Run management command:
+
+   ```
+
+   docker compose run --rm backend sh -c "python manage.py loan_flow"
+
+   ```
+
+1. Manual: Load fixtures in order:
+
+   For finer control over data evolution, load fixtures one by one and
+   watch how the application data evolves from the admin console or
+   using a JSON interface or frontend.
    
    ```
 
    docker compose run --rm backend sh -c "python manage.py loaddata users.json"
    docker compose run --rm backend sh -c "python manage.py loaddata loan_profiles.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata fund_lenders.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata lenders_contribute.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata pay_borrowers.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata borrowers_repay.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata apply_repayments.json"
+   docker compose run --rm backend sh -c "python manage.py loaddata lenders_withdraw.json"
 
    ```
 

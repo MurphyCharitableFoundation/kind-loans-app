@@ -1,12 +1,18 @@
 """Django admin customization."""
 
 from django.contrib import admin, messages
-from django.contrib.admin.options import (HttpResponseRedirect, csrf_protect_m,
-                                          unquote)
+from django.contrib.admin.options import (
+    HttpResponseRedirect,
+    csrf_protect_m,
+    unquote,
+)
 from loan import models
 
-from .services import (borrower_apply_repayments, borrower_make_payment,
-                       borrower_receive_payment)
+from .services import (
+    borrower_apply_repayments,
+    borrower_make_payment,
+    borrower_receive_payment,
+)
 
 
 class LoanProfileAdmin(admin.ModelAdmin):
@@ -68,7 +74,6 @@ class LoanProfileAdmin(admin.ModelAdmin):
         if isinstance(queryset, models.LoanProfile):
             obj = queryset
             borrower_apply_repayments(borrower=obj)
-            obj.apply_repayments()
             updated_count = 1
         else:
             list(

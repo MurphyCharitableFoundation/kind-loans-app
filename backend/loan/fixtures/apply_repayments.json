@@ -1,0 +1,359 @@
+[
+{
+  "model": "loan.category",
+  "pk": 1,
+  "fields": {
+    "name": "Business"
+  }
+},
+{
+  "model": "loan.category",
+  "pk": 2,
+  "fields": {
+    "name": "Retail"
+  }
+},
+{
+  "model": "loan.category",
+  "pk": 3,
+  "fields": {
+    "name": "Agriculture"
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 1,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-04-02T05:25:37.070Z",
+    "user": 5,
+    "profile_img": "",
+    "title": "Sewing Business",
+    "description": "Need a sewing machine and fabric to grow my tailoring shop.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "300.00",
+    "is_paid_raised_amount": true,
+    "has_repaid": true,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Nigeria",
+    "city": "Lagos",
+    "categories": [
+      1
+    ]
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 2,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-03-31T02:52:48.789Z",
+    "user": 6,
+    "profile_img": "",
+    "title": "Grocery Expansion",
+    "description": "Expanding the local grocery store to serve more customers.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "500.00",
+    "is_paid_raised_amount": false,
+    "has_repaid": false,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Uganda",
+    "city": "Kampala",
+    "categories": [
+      2
+    ]
+  }
+},
+{
+  "model": "loan.loanprofile",
+  "pk": 3,
+  "fields": {
+    "created": "2025-03-31T02:52:48.789Z",
+    "modified": "2025-03-31T02:52:48.789Z",
+    "user": 7,
+    "profile_img": "",
+    "title": "Farm Irrigation",
+    "description": "Buying irrigation equipment to improve farm productivity.",
+    "story": "",
+    "loan_duration": 12,
+    "target_amount_currency": "USD",
+    "target_amount": "800.00",
+    "is_paid_raised_amount": false,
+    "has_repaid": false,
+    "deadline_to_receive_loan": "2025-03-31",
+    "status": 1,
+    "country": "Kenya",
+    "city": "Nairobi",
+    "categories": [
+      3
+    ]
+  }
+},
+{
+  "model": "loan.contribution",
+  "pk": 1,
+  "fields": {
+    "created": "2025-04-02T04:04:28.337Z",
+    "modified": "2025-04-02T04:04:28.337Z",
+    "lender": 3,
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "100.00"
+  }
+},
+{
+  "model": "loan.contribution",
+  "pk": 2,
+  "fields": {
+    "created": "2025-04-02T04:05:01.926Z",
+    "modified": "2025-04-02T04:05:01.926Z",
+    "lender": 4,
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "200.00"
+  }
+},
+{
+  "model": "loan.repayment",
+  "pk": 1,
+  "fields": {
+    "created": "2025-04-02T04:15:52.563Z",
+    "modified": "2025-04-02T05:26:52.572Z",
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "description": "1st repayment installment",
+    "is_applied": true
+  }
+},
+{
+  "model": "loan.repayment",
+  "pk": 2,
+  "fields": {
+    "created": "2025-04-02T04:16:08.824Z",
+    "modified": "2025-04-02T05:26:52.568Z",
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "description": "2nd repayment installment",
+    "is_applied": true
+  }
+},
+{
+  "model": "loan.repayment",
+  "pk": 3,
+  "fields": {
+    "created": "2025-04-02T04:16:18.395Z",
+    "modified": "2025-04-02T05:26:52.562Z",
+    "borrower": 1,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "description": "3rd repayment installment",
+    "is_applied": true
+  }
+},
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Alex",
+    "last_name": "Admin",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.596Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "a_alex@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Valerie",
+    "last_name": "Volunteer",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.601Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "v_valerie@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Luke",
+    "last_name": "Lender",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.602Z",
+    "modified": "2025-04-02T05:26:52.571Z",
+    "email": "l_luke@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "99.99",
+    "groups": [
+      3
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Lana",
+    "last_name": "Lender",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.603Z",
+    "modified": "2025-04-02T05:26:52.570Z",
+    "email": "l_lana@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "200.01",
+    "groups": [
+      3
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Bob",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.605Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_bob@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Becky",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.606Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_becky@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Brian",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.607Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_brian@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$4Z8yMciw6zDoCyeKbJiYR2$GV2OJsLjjIEvF/Y9PEsKA3Ygu+qn/Pufvay6qM70VMM=",
+    "last_login": "2025-03-31T02:27:30.599Z",
+    "is_superuser": true,
+    "first_name": "Super",
+    "last_name": "User",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:27:24.587Z",
+    "created": "2025-03-31T02:27:24.587Z",
+    "modified": "2025-03-31T02:30:07.631Z",
+    "email": "admin@mcf.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [],
+    "user_permissions": []
+  }
+}
+]

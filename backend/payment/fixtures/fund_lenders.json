@@ -1,0 +1,378 @@
+[
+{
+  "model": "payment.payment",
+  "pk": 2,
+  "fields": {
+    "created": "2025-04-02T01:16:52.521Z",
+    "modified": "2025-04-02T01:17:01.582Z",
+    "user": 3,
+    "platform": "PAYPAL",
+    "gateway_payment_id": "5VP94921H8364671M",
+    "transaction": 1,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "status": "COMPLETED"
+  }
+},
+{
+  "model": "payment.payment",
+  "pk": 3,
+  "fields": {
+    "created": "2025-04-02T03:41:53.285Z",
+    "modified": "2025-04-02T03:43:42.368Z",
+    "user": 4,
+    "platform": "PAYPAL",
+    "gateway_payment_id": "4JV05235FW7042733",
+    "transaction": 2,
+    "amount_currency": "USD",
+    "amount": "200.00",
+    "status": "COMPLETED"
+  }
+},
+{
+  "model": "user.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Alex",
+    "last_name": "Admin",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.596Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "a_alex@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      1
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Valerie",
+    "last_name": "Volunteer",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.601Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "v_valerie@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      2
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Luke",
+    "last_name": "Lender",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.602Z",
+    "modified": "2025-04-02T01:17:01.546Z",
+    "email": "l_luke@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "100.00",
+    "groups": [
+      3
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 4,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Lana",
+    "last_name": "Lender",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.603Z",
+    "modified": "2025-04-02T03:43:42.347Z",
+    "email": "l_lana@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "200.00",
+    "groups": [
+      3
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 5,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Bob",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.605Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_bob@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 6,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Becky",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.606Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_becky@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 7,
+  "fields": {
+    "password": "pbkdf2_sha256$260000$example$hashedpassword",
+    "last_login": null,
+    "is_superuser": false,
+    "first_name": "Brian",
+    "last_name": "Borrower",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:23:40.888Z",
+    "created": "2025-03-31T02:25:46.607Z",
+    "modified": "2025-03-31T02:25:46.513Z",
+    "email": "b_brian@example.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [
+      4
+    ],
+    "user_permissions": []
+  }
+},
+{
+  "model": "user.user",
+  "pk": 8,
+  "fields": {
+    "password": "pbkdf2_sha256$600000$4Z8yMciw6zDoCyeKbJiYR2$GV2OJsLjjIEvF/Y9PEsKA3Ygu+qn/Pufvay6qM70VMM=",
+    "last_login": "2025-03-31T02:27:30.599Z",
+    "is_superuser": true,
+    "first_name": "Super",
+    "last_name": "User",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-03-31T02:27:24.587Z",
+    "created": "2025-03-31T02:27:24.587Z",
+    "modified": "2025-03-31T02:30:07.631Z",
+    "email": "admin@mcf.com",
+    "phone_number": null,
+    "profile_img": "",
+    "amount_available_currency": "USD",
+    "amount_available": "0.00",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 1,
+  "fields": {
+    "uuid": "2uTJwEZ2QVWGka1tpkkjgQ",
+    "name": "platform_cash_account",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "AS",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 1,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 2,
+  "fields": {
+    "uuid": "omwS4xkLQ6GgToEW2JTQow",
+    "name": "platform_bad_debt",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "EX",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 2,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 3,
+  "fields": {
+    "uuid": "3qDgLwv2StaNOqEsdmg_Lg",
+    "name": "platform_account_payables",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "LI",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 3,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.account",
+  "pk": 4,
+  "fields": {
+    "uuid": "5gClBUPhTluwKZT_O9bxyA",
+    "name": "platform_account_receivables",
+    "parent": null,
+    "code": null,
+    "full_code": null,
+    "type": "AS",
+    "is_bank_account": false,
+    "currencies": [
+      "USD"
+    ],
+    "lft": 1,
+    "rght": 2,
+    "tree_id": 4,
+    "level": 0
+  }
+},
+{
+  "model": "hordak.transaction",
+  "pk": 1,
+  "fields": {
+    "uuid": "96J3joiHSMG3dKcAd7CQbQ",
+    "timestamp": "2025-04-02T01:17:01.576Z",
+    "date": "2025-04-02",
+    "description": "User User: l_luke@example.com added funds to their account"
+  }
+},
+{
+  "model": "hordak.transaction",
+  "pk": 2,
+  "fields": {
+    "uuid": "oFt6wT7uSn2Q3WJl6LgFFw",
+    "timestamp": "2025-04-02T03:43:42.361Z",
+    "date": "2025-04-02",
+    "description": "User User: l_lana@example.com added funds to their account"
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 1,
+  "fields": {
+    "uuid": "4Gm3XQaLRcGGRLx9c7SiUA",
+    "transaction": 1,
+    "account": 3,
+    "amount_currency": "USD",
+    "amount": "100.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 2,
+  "fields": {
+    "uuid": "lpGwMqTOQ-e2lj7ogcITIg",
+    "transaction": 1,
+    "account": 1,
+    "amount_currency": "USD",
+    "amount": "-100.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 3,
+  "fields": {
+    "uuid": "yLzA8XHxToaxtTlykwyA-A",
+    "transaction": 2,
+    "account": 3,
+    "amount_currency": "USD",
+    "amount": "200.00",
+    "description": ""
+  }
+},
+{
+  "model": "hordak.leg",
+  "pk": 4,
+  "fields": {
+    "uuid": "18McDLJFTHCaX6SxCDUv7w",
+    "transaction": 2,
+    "account": 1,
+    "amount_currency": "USD",
+    "amount": "-200.00",
+    "description": ""
+  }
+}
+]

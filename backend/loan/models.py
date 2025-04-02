@@ -1,6 +1,5 @@
 """Database models."""
 
-from core.services import to_money
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
@@ -162,11 +161,6 @@ class Contribution(TimeStampedModel):
                 {"amount": f"Amount <= lender's funds: {max_contribution}."}
             )
 
-        if self.amount <= to_money(0):
-            raise ValidationError(
-                {"amount": "Amount cannot be negative or zero."}
-            )
-
         total_raised = self.borrower.total_raised()
         rfn = self.borrower.target_amount - total_raised
         if self.amount > rfn:
@@ -217,11 +211,6 @@ class Repayment(TimeStampedModel):
         if self.amount > rb:
             raise ValidationError(
                 {"amount": f"Amount <= loan profile remaining balance {rb}"}
-            )
-
-        if self.amount <= to_money(0):
-            raise ValidationError(
-                {"amount": "Amount cannot be negative or zero."}
             )
 
     def __str__(self):

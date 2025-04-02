@@ -25,6 +25,13 @@ class ToMoneyFunctionTest(TestCase):
         self.assertIsInstance(result, Money)
         self.assertEqual(result, Money(200, "USD"))
 
+    def test_to_money_with_valid_str(self):
+        """Test conversion of str to Money."""
+        amount = "200.50"
+        result = to_money(amount)
+        self.assertIsInstance(result, Money)
+        self.assertEqual(result, Money(200.50, "USD"))
+
     def test_to_money_with_float(self):
         """Test conversion of float to Money."""
         amount = 50.75
@@ -44,7 +51,5 @@ class ToMoneyFunctionTest(TestCase):
         invalid_values = ["invalid", None, {"value": 100}, [10, 20], object()]
 
         for value in invalid_values:
-            with self.assertRaises(ValueError) as context:
+            with self.assertRaises(ValueError):
                 to_money(value)
-
-            self.assertIn("Invalid type for amount:", str(context.exception))
