@@ -5,9 +5,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from .models import LoanProfile
-from .permissions import IsOwnerOrReadOnly
-from .serializers import LoanProfileSerializer
+from ..models import LoanProfile
+
+from ..permissions import IsOwnerOrReadOnly
+from ..serializers import LoanProfileSerializer
 
 
 class LoanProfileViewSet(viewsets.ModelViewSet):
@@ -18,8 +19,7 @@ class LoanProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        """Assign the authenticated user as the profile owner when
-        creating a loan profile."""
+        """Assign the authenticated user as the profile owner."""
         serializer.save(user=self.request.user)
         # TODO: Consider that the authenticated user might not be the
         # owner of the account they are updating ... their are admins

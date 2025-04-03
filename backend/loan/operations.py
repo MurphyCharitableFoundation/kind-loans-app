@@ -1,4 +1,4 @@
-"""Money operations between app, lender, and borrower."""
+"""Loan operations."""
 
 from accounting.utils import config_platform_accounts
 

@@ -150,7 +150,7 @@ class Contribution(TimeStampedModel):
         max_digits=10,
         decimal_places=2,
         default_currency="USD",
-        validators=[MinValueValidator(Money(0.01, "USD"))],
+        validators=[MinValueValidator(Money(2.50, "USD"))],
     )
 
     def clean(self):
