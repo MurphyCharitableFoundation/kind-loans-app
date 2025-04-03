@@ -8,6 +8,7 @@ from .views import (
     ContributionListAPI,
     ContributionDetailAPI,
     ContributionCreateAPI,
+    ContributionHistoryAPI,
 )
 
 router = DefaultRouter()
@@ -25,6 +26,11 @@ contribution_patterns = [
         name="detail",
     ),
     path("create/", ContributionCreateAPI.as_view(), name="create"),
+    path(
+        "history/",
+        ContributionHistoryAPI.as_view(),
+        name="history",
+    ),
 ]
 
 urlpatterns = [

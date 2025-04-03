@@ -66,3 +66,16 @@ class ContributionViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["amount"], "50.00")
         self.assertEqual(Contribution.objects.count(), 2)
+
+    def test_contribution_history_with_lender_and_borrower_filter(self):
+        url = reverse("contribution:history")
+        response = self.client.get(
+            url,
+            {"lender": self.lender.id, "borrower": self.loan_profile.id},
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["amount"], "150.00")
+        self.assertEqual(response.data[0]["lender"], self.lender.id)
+        self.assertEqual(response.data[0]["borrower"], self.loan_profile.id)

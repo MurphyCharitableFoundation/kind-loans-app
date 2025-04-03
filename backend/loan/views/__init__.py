@@ -5,4 +5,5 @@ from .contribution import (  # noqa
     ContributionListAPI,
     ContributionDetailAPI,
     ContributionCreateAPI,
+    ContributionHistoryAPI,
 )

@@ -19,7 +19,7 @@ class ContributionListAPI(APIView):
 
         class Meta:
             model = Contribution
-            fields = ("id", "lender", "borrower", "amount")
+            fields = ("id", "lender", "borrower", "amount", "created")
 
     def get(self, request):
         """GET Contributions."""
@@ -38,7 +38,7 @@ class ContributionDetailAPI(APIView):
 
         class Meta:
             model = Contribution
-            fields = ("id", "lender", "borrower", "amount")
+            fields = ("id", "lender", "borrower", "amount", "created")
 
     def get(self, request, contribution_id):
         """GET Contribution."""
@@ -71,4 +71,29 @@ class ContributionCreateAPI(APIView):
 
         data = ContributionDetailAPI.OutputSerializer(contribution).data
 
+        return Response(data)
+
+
+class ContributionHistoryAPI(APIView):
+    """
+    Contribution History API.
+
+    Filter contribution history by lender and loan profile.
+    """
+
+    def get(self, request):
+        """GET history."""
+        lender_id = request.GET.get("lender")
+        borrower_id = request.GET.get("borrower")
+
+        filters = {}
+        if lender_id:
+            filters["lender"] = lender_id
+        if borrower_id:
+            filters["borrower"] = borrower_id
+
+        contributions = contribution_list(filters=filters)
+        data = ContributionListAPI.OutputSerializer(
+            contributions, many=True
+        ).data
         return Response(data)
