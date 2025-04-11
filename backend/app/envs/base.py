@@ -130,12 +130,23 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "user.User"
 
+# DRF
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),
 }
+
+# DRF-SPECTACULAR
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Kind Loans Application API",
+    "DESCRIPTION": "API docs for Kind Loans Application",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
+}
+
 
 # MCF
 MCF_APP_NAME = "Murphy Charitable Foundation - Kind Loans App"

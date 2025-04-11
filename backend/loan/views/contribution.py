@@ -5,6 +5,7 @@ from django.http import Http404
 from rest_framework import serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema
 
 from ..models import Contribution
 from ..services import contribution_create
@@ -21,6 +22,7 @@ class ContributionListAPI(APIView):
             model = Contribution
             fields = ("id", "lender", "borrower", "amount", "created")
 
+    @extend_schema(responses={200: OutputSerializer})
     def get(self, request):
         """GET Contributions."""
         contributions = contribution_list()
@@ -40,6 +42,7 @@ class ContributionDetailAPI(APIView):
             model = Contribution
             fields = ("id", "lender", "borrower", "amount", "created")
 
+    @extend_schema(responses={200: OutputSerializer})
     def get(self, request, contribution_id):
         """GET Contribution."""
         contribution = contribution_get(contribution_id)
@@ -62,6 +65,10 @@ class ContributionCreateAPI(APIView):
             model = Contribution
             fields = ("id", "lender", "borrower", "amount")
 
+    @extend_schema(
+        request=InputSerializer,
+        responses={200: ContributionDetailAPI.OutputSerializer},
+    )
     def post(self, request):
         """POST Contribution."""
         serializer = self.InputSerializer(data=request.data)
@@ -81,6 +88,7 @@ class ContributionHistoryAPI(APIView):
     Filter contribution history by lender and loan profile.
     """
 
+    @extend_schema(responses={200: ContributionListAPI.OutputSerializer})
     def get(self, request):
         """GET history."""
         lender_id = request.GET.get("lender")
