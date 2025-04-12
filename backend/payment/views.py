@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from drf_spectacular.utils import (
     extend_schema,
+    extend_schema_serializer,
     OpenApiExample,
     OpenApiResponse,
     OpenApiParameter,
@@ -28,6 +29,7 @@ from .services import (
 User = get_user_model()
 
 
+@extend_schema_serializer(component_name="CreatePayPalPayment")
 class CreatePayPalPaymentView(APIView):
     """Create PayPal Payment View."""
 
@@ -105,6 +107,7 @@ class CreatePayPalPaymentView(APIView):
         return Response(paypal_payment_data, status=201)
 
 
+@extend_schema_serializer(component_name="CapturePayPalPayment")
 class CapturePayPalPaymentView(APIView):
     """Execute PayPal Payment View."""
 
@@ -266,6 +269,7 @@ class CapturePayPalPaymentView(APIView):
             return Response({"error": str(e)}, status=400)
 
 
+@extend_schema_serializer(component_name="CancelPayPalPayment")
 class CancelPayPalPaymentView(APIView):
     """Cancel PayPal Payment View."""
 
@@ -320,6 +324,7 @@ class CancelPayPalPaymentView(APIView):
             return Response({"error": str(e)}, status=400)
 
 
+@extend_schema_serializer(component_name="CapturePayPalPayout")
 class CapturePayPalPayoutView(APIView):
     """Capture PayPal Payout View."""
 
